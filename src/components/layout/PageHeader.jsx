@@ -7,17 +7,16 @@ export default function PageHeader({ eyebrow, title, description, align = 'left'
   return (
     <Box
       sx={{
-        bgcolor: colors.canvasElevated,
-        borderRadius: '24px',
-        boxShadow: '0 18px 50px rgba(15,17,21,0.045)',
-        p: { xs: `${spacing.md}px`, md: `${spacing.lg}px` },
+        borderBottom: `1px solid ${colors.hairlineSoft}`,
+        pb: { xs: `${spacing.md}px`, md: `${spacing.lg}px` },
+        pt: { xs: `${spacing.xs}px`, md: `${spacing.sm}px` },
         textAlign: align,
         ...sx
       }}
     >
       <MaxWidth size="standard" sx={{ mx: align === 'center' ? 'auto' : 0 }}>
         {eyebrow ? (
-          <Typography variant="caption" color="primary" sx={{ display: 'block', mb: 2 }}>
+          <Typography variant="caption" color="primary" sx={{ display: 'block', mb: 2, fontWeight: 750 }}>
             {eyebrow}
           </Typography>
         ) : null}
@@ -25,7 +24,7 @@ export default function PageHeader({ eyebrow, title, description, align = 'left'
           {title}
         </Typography>
         {description ? (
-          <Typography variant="body1" color="text.secondary" sx={{ mt: 2.5, maxWidth: 720, lineHeight: 1.8 }}>
+          <Typography variant="body1" color="text.secondary" sx={{ mt: 2.5, maxWidth: 760, lineHeight: 1.85 }}>
             {description}
           </Typography>
         ) : null}

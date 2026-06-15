@@ -26,7 +26,7 @@
       "value": {
         "title": "รถเช่าหาดใหญ่ | WWJ Car Rent",
         "description": "รถเช่าหาดใหญ่ ราคาดี รับรถสนามบิน จองง่ายผ่าน LINE",
-        "ogImage": "/photo/wwj-carrent.webp"
+        "ogImage": "/images/optimized/home-hero-600.webp"
       }
     },
     {
@@ -34,7 +34,7 @@
       "value": {
         "heroTitle": "รถเช่าหาดใหญ่ จองง่าย รับรถไว",
         "heroSubtitle": "รับรถสนามบินหาดใหญ่ เลือกรถสะดวก และคุยกับทีมงานได้โดยตรงก่อนจอง",
-        "heroImage": "/photo/wwj-carrent.webp",
+        "heroImage": "/images/optimized/home-hero-600.webp",
         "primaryCtaText": "จองผ่าน LINE",
         "secondaryCtaText": "ดูรถทั้งหมด",
         "trustItems": ["รถสะอาด", "รับรถสนามบิน", "จองผ่าน LINE"]
@@ -67,6 +67,11 @@
       "title": "เกี่ยวกับเรา",
       "metaTitle": "เกี่ยวกับเรา | WWJ Car Rent",
       "metaDescription": "รู้จัก WWJ Car Rent รถเช่าหาดใหญ่ รับรถสนามบิน และบริการลูกค้าแบบเป็นกันเอง",
+      "canonical": "/about-us",
+      "ogTitle": "เกี่ยวกับ WWJ Car Rent",
+      "ogDescription": "รถเช่าหาดใหญ่ รับรถสนามบิน สำหรับลูกค้าท้องถิ่น นักท่องเที่ยว และลูกค้ารายเดือน",
+      "ogImage": "/images/optimized/home-hero-600.webp",
+      "schema": {},
       "content": {
         "sections": ["companyStory", "serviceAreas", "airportPickup", "whyChooseWWJ"]
       },
@@ -78,6 +83,11 @@
       "title": "เงื่อนไขการเช่า",
       "metaTitle": "เงื่อนไขการเช่ารถ | WWJ Car Rent",
       "metaDescription": "เอกสาร เงินมัดจำ ประกันภัย น้ำมัน และการคืนรถสำหรับรถเช่าหาดใหญ่",
+      "canonical": "/rental-conditions",
+      "ogTitle": "เงื่อนไขการเช่ารถหาดใหญ่",
+      "ogDescription": "เอกสาร เงินมัดจำ ประกันภัย น้ำมัน และการคืนรถสำหรับลูกค้า WWJ Car Rent",
+      "ogImage": "/images/optimized/home-hero-600.webp",
+      "schema": {},
       "content": {
         "sections": ["documents", "deposit", "insurance", "fuel", "lateReturn"]
       },

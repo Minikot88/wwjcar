@@ -1,6 +1,7 @@
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router';
 import PageHeader from '../components/layout/PageHeader.jsx';
+import InternalLinkCluster from '../components/seo/InternalLinkCluster.jsx';
 import Seo from '../components/seo/Seo.jsx';
 import { createBreadcrumbSchema, createLocalBusinessSchema } from '../features/seo/schemas.js';
 import { colors } from '../theme/colors.js';
@@ -105,6 +106,11 @@ export default function AboutUs() {
             </Button>
           </Stack>
         </Box>
+
+        <InternalLinkCluster
+          title="เริ่มวางแผนเช่ารถกับ WWJ"
+          description="ดูรุ่นรถยอดนิยม เงื่อนไขการเช่า และคำถามที่พบบ่อยสำหรับรถเช่าหาดใหญ่และรถเช่าสนามบินหาดใหญ่"
+        />
       </Stack>
     </>
   );

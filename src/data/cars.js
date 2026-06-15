@@ -1,15 +1,17 @@
+import imageManifest from './generated/imageManifest.json';
+
 const carImages = {
-  almera: new URL('../../photo/almera.webp', import.meta.url).href,
-  attrage: new URL('../../photo/attage.webp', import.meta.url).href,
-  brio: new URL('../../photo/brio.webp', import.meta.url).href,
-  ciaz: new URL('../../photo/ciaz.webp', import.meta.url).href,
-  march: new URL('../../photo/march.webp', import.meta.url).href,
-  newAltis: new URL('../../photo/new-altis.webp', import.meta.url).href,
-  newVios: new URL('../../photo/new-vios.webp', import.meta.url).href,
-  newYaris: new URL('../../photo/new-yaris.webp', import.meta.url).href,
-  swift: new URL('../../photo/swift.webp', import.meta.url).href,
-  vios: new URL('../../photo/vios.webp', import.meta.url).href,
-  yaris: new URL('../../photo/yaris.webp', import.meta.url).href
+  almera: imageManifest['nissan-almera'].src,
+  attrage: imageManifest['mitsubishi-attrage'].src,
+  brio: imageManifest['honda-brio'].src,
+  ciaz: imageManifest['suzuki-ciaz'].src,
+  march: imageManifest['nissan-march'].src,
+  newAltis: imageManifest['toyota-altis'].src,
+  newVios: imageManifest['toyota-new-vios'].src,
+  newYaris: imageManifest['toyota-new-yaris'].src,
+  swift: imageManifest['suzuki-swift'].src,
+  vios: imageManifest['toyota-vios'].src,
+  yaris: imageManifest['toyota-yaris'].src
 };
 
 export const cars = [

@@ -3,42 +3,42 @@ export const fontFamily = '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI
 export const typographyScale = {
   display: {
     fontFamily,
-    fontSize: 'clamp(2.25rem, 4.8vw, 3.5rem)',
-    fontWeight: 700,
-    lineHeight: 1.12,
+    fontSize: 'clamp(2.15rem, 4.2vw, 3.25rem)',
+    fontWeight: 650,
+    lineHeight: 1.14,
     letterSpacing: 0
   },
   h1: {
     fontFamily,
-    fontSize: 'clamp(2rem, 5vw, 3.25rem)',
-    fontWeight: 700,
-    lineHeight: 1.12,
+    fontSize: 'clamp(1.85rem, 4.2vw, 2.85rem)',
+    fontWeight: 650,
+    lineHeight: 1.16,
     letterSpacing: 0
   },
   h2: {
     fontFamily,
-    fontSize: 'clamp(1.5rem, 3.5vw, 2.25rem)',
-    fontWeight: 700,
-    lineHeight: 1.18,
+    fontSize: 'clamp(1.35rem, 3vw, 2rem)',
+    fontWeight: 650,
+    lineHeight: 1.22,
     letterSpacing: 0
   },
   h3: {
     fontFamily,
-    fontSize: 'clamp(1.125rem, 2.4vw, 1.375rem)',
-    fontWeight: 700,
-    lineHeight: 1.35,
+    fontSize: 'clamp(1.05rem, 2vw, 1.25rem)',
+    fontWeight: 650,
+    lineHeight: 1.38,
     letterSpacing: 0
   },
   bodyLarge: {
     fontFamily,
-    fontSize: '1.125rem',
+    fontSize: '1.0625rem',
     fontWeight: 400,
     lineHeight: 1.65,
     letterSpacing: 0
   },
   body: {
     fontFamily,
-    fontSize: '0.9375rem',
+    fontSize: '0.96rem',
     fontWeight: 400,
     lineHeight: 1.65,
     letterSpacing: 0
@@ -46,7 +46,7 @@ export const typographyScale = {
   caption: {
     fontFamily,
     fontSize: '0.8125rem',
-    fontWeight: 700,
+    fontWeight: 650,
     lineHeight: 1.4,
     letterSpacing: 0,
     textTransform: 'none'

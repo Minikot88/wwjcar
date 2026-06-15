@@ -1,6 +1,7 @@
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router';
 import PageHeader from '../components/layout/PageHeader.jsx';
+import InternalLinkCluster from '../components/seo/InternalLinkCluster.jsx';
 import Seo from '../components/seo/Seo.jsx';
 import { cars } from '../data/cars.js';
 import { createBreadcrumbSchema } from '../features/seo/schemas.js';
@@ -81,6 +82,11 @@ export default function MonthlyCarRental() {
             ดูรถทั้งหมด
           </Button>
         </Box>
+
+        <InternalLinkCluster
+          title="เปรียบเทียบก่อนเช่ารถรายเดือน"
+          description="ดูรถเช่าทั้งหมด อ่านเงื่อนไข เอกสารที่ใช้ และคำถามยอดนิยมสำหรับลูกค้าที่ต้องการใช้รถต่อเนื่องในหาดใหญ่"
+        />
       </Stack>
     </>
   );

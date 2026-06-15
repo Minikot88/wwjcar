@@ -6,6 +6,7 @@ import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router';
 import PageHeader from '../components/layout/PageHeader.jsx';
+import InternalLinkCluster from '../components/seo/InternalLinkCluster.jsx';
 import Seo from '../components/seo/Seo.jsx';
 import { contactConfig } from '../config/contact.js';
 import { createBreadcrumbSchema, createLocalBusinessSchema } from '../features/seo/schemas.js';
@@ -124,6 +125,11 @@ export default function Contact() {
             ดูรถทั้งหมด
           </Button>
         </Box>
+
+        <InternalLinkCluster
+          title="ข้อมูลที่ช่วยให้จองรถได้เร็วขึ้น"
+          description="ดูรุ่นรถ ราคา เงื่อนไขการเช่า และคำถามที่พบบ่อยก่อนติดต่อทีมงานเพื่อยืนยันรถว่าง"
+        />
       </Stack>
     </>
   );

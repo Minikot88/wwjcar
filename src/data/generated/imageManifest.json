@@ -1,0 +1,276 @@
+{
+  "toyota-yaris": {
+    "alt": "Toyota Yaris รถเช่าหาดใหญ่ WWJ Car Rent",
+    "src": "/images/optimized/toyota-yaris-320.webp",
+    "thumbnail": "/images/optimized/toyota-yaris-thumb.webp",
+    "width": 600,
+    "height": 516,
+    "srcSet": "/images/optimized/toyota-yaris-320.webp 320w, /images/optimized/toyota-yaris-600.webp 600w",
+    "sizes": "(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw",
+    "variants": [
+      {
+        "width": 320,
+        "src": "/images/optimized/toyota-yaris-320.webp"
+      },
+      {
+        "width": 600,
+        "src": "/images/optimized/toyota-yaris-600.webp"
+      }
+    ]
+  },
+  "toyota-new-yaris": {
+    "alt": "Toyota New Yaris รถเช่าหาดใหญ่รายวัน WWJ Car Rent",
+    "src": "/images/optimized/toyota-new-yaris-320.webp",
+    "thumbnail": "/images/optimized/toyota-new-yaris-thumb.webp",
+    "width": 600,
+    "height": 516,
+    "srcSet": "/images/optimized/toyota-new-yaris-320.webp 320w, /images/optimized/toyota-new-yaris-600.webp 600w",
+    "sizes": "(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw",
+    "variants": [
+      {
+        "width": 320,
+        "src": "/images/optimized/toyota-new-yaris-320.webp"
+      },
+      {
+        "width": 600,
+        "src": "/images/optimized/toyota-new-yaris-600.webp"
+      }
+    ]
+  },
+  "toyota-vios": {
+    "alt": "Toyota Vios รถเช่าสนามบินหาดใหญ่",
+    "src": "/images/optimized/toyota-vios-320.webp",
+    "thumbnail": "/images/optimized/toyota-vios-thumb.webp",
+    "width": 600,
+    "height": 516,
+    "srcSet": "/images/optimized/toyota-vios-320.webp 320w, /images/optimized/toyota-vios-600.webp 600w",
+    "sizes": "(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw",
+    "variants": [
+      {
+        "width": 320,
+        "src": "/images/optimized/toyota-vios-320.webp"
+      },
+      {
+        "width": 600,
+        "src": "/images/optimized/toyota-vios-600.webp"
+      }
+    ]
+  },
+  "toyota-new-vios": {
+    "alt": "Toyota New Vios รถเช่าสงขลาและสนามบินหาดใหญ่",
+    "src": "/images/optimized/toyota-new-vios-320.webp",
+    "thumbnail": "/images/optimized/toyota-new-vios-thumb.webp",
+    "width": 600,
+    "height": 516,
+    "srcSet": "/images/optimized/toyota-new-vios-320.webp 320w, /images/optimized/toyota-new-vios-600.webp 600w",
+    "sizes": "(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw",
+    "variants": [
+      {
+        "width": 320,
+        "src": "/images/optimized/toyota-new-vios-320.webp"
+      },
+      {
+        "width": 600,
+        "src": "/images/optimized/toyota-new-vios-600.webp"
+      }
+    ]
+  },
+  "toyota-altis": {
+    "alt": "Toyota Altis รถเช่าหาดใหญ่สำหรับครอบครัว",
+    "src": "/images/optimized/toyota-altis-320.webp",
+    "thumbnail": "/images/optimized/toyota-altis-thumb.webp",
+    "width": 600,
+    "height": 516,
+    "srcSet": "/images/optimized/toyota-altis-320.webp 320w, /images/optimized/toyota-altis-600.webp 600w",
+    "sizes": "(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw",
+    "variants": [
+      {
+        "width": 320,
+        "src": "/images/optimized/toyota-altis-320.webp"
+      },
+      {
+        "width": 600,
+        "src": "/images/optimized/toyota-altis-600.webp"
+      }
+    ]
+  },
+  "honda-brio": {
+    "alt": "Honda Brio รถเช่ารายวันหาดใหญ่",
+    "src": "/images/optimized/honda-brio-320.webp",
+    "thumbnail": "/images/optimized/honda-brio-thumb.webp",
+    "width": 600,
+    "height": 516,
+    "srcSet": "/images/optimized/honda-brio-320.webp 320w, /images/optimized/honda-brio-600.webp 600w",
+    "sizes": "(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw",
+    "variants": [
+      {
+        "width": 320,
+        "src": "/images/optimized/honda-brio-320.webp"
+      },
+      {
+        "width": 600,
+        "src": "/images/optimized/honda-brio-600.webp"
+      }
+    ]
+  },
+  "nissan-almera": {
+    "alt": "Nissan Almera รถเช่าหาดใหญ่รายวัน",
+    "src": "/images/optimized/nissan-almera-320.webp",
+    "thumbnail": "/images/optimized/nissan-almera-thumb.webp",
+    "width": 600,
+    "height": 516,
+    "srcSet": "/images/optimized/nissan-almera-320.webp 320w, /images/optimized/nissan-almera-600.webp 600w",
+    "sizes": "(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw",
+    "variants": [
+      {
+        "width": 320,
+        "src": "/images/optimized/nissan-almera-320.webp"
+      },
+      {
+        "width": 600,
+        "src": "/images/optimized/nissan-almera-600.webp"
+      }
+    ]
+  },
+  "nissan-march": {
+    "alt": "Nissan March รถเช่าประหยัดหาดใหญ่",
+    "src": "/images/optimized/nissan-march-320.webp",
+    "thumbnail": "/images/optimized/nissan-march-thumb.webp",
+    "width": 600,
+    "height": 517,
+    "srcSet": "/images/optimized/nissan-march-320.webp 320w, /images/optimized/nissan-march-600.webp 600w",
+    "sizes": "(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw",
+    "variants": [
+      {
+        "width": 320,
+        "src": "/images/optimized/nissan-march-320.webp"
+      },
+      {
+        "width": 600,
+        "src": "/images/optimized/nissan-march-600.webp"
+      }
+    ]
+  },
+  "suzuki-swift": {
+    "alt": "Suzuki Swift รถเช่าหาดใหญ่ WWJ Car Rent",
+    "src": "/images/optimized/suzuki-swift-320.webp",
+    "thumbnail": "/images/optimized/suzuki-swift-thumb.webp",
+    "width": 600,
+    "height": 516,
+    "srcSet": "/images/optimized/suzuki-swift-320.webp 320w, /images/optimized/suzuki-swift-600.webp 600w",
+    "sizes": "(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw",
+    "variants": [
+      {
+        "width": 320,
+        "src": "/images/optimized/suzuki-swift-320.webp"
+      },
+      {
+        "width": 600,
+        "src": "/images/optimized/suzuki-swift-600.webp"
+      }
+    ]
+  },
+  "suzuki-ciaz": {
+    "alt": "Suzuki Ciaz รถเช่าสงขลาและหาดใหญ่",
+    "src": "/images/optimized/suzuki-ciaz-320.webp",
+    "thumbnail": "/images/optimized/suzuki-ciaz-thumb.webp",
+    "width": 600,
+    "height": 516,
+    "srcSet": "/images/optimized/suzuki-ciaz-320.webp 320w, /images/optimized/suzuki-ciaz-600.webp 600w",
+    "sizes": "(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw",
+    "variants": [
+      {
+        "width": 320,
+        "src": "/images/optimized/suzuki-ciaz-320.webp"
+      },
+      {
+        "width": 600,
+        "src": "/images/optimized/suzuki-ciaz-600.webp"
+      }
+    ]
+  },
+  "mitsubishi-attrage": {
+    "alt": "Mitsubishi Attrage รถเช่ารายเดือนหาดใหญ่",
+    "src": "/images/optimized/mitsubishi-attrage-320.webp",
+    "thumbnail": "/images/optimized/mitsubishi-attrage-thumb.webp",
+    "width": 600,
+    "height": 516,
+    "srcSet": "/images/optimized/mitsubishi-attrage-320.webp 320w, /images/optimized/mitsubishi-attrage-600.webp 600w",
+    "sizes": "(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw",
+    "variants": [
+      {
+        "width": 320,
+        "src": "/images/optimized/mitsubishi-attrage-320.webp"
+      },
+      {
+        "width": 600,
+        "src": "/images/optimized/mitsubishi-attrage-600.webp"
+      }
+    ]
+  },
+  "home-hero": {
+    "alt": "รถเช่าหาดใหญ่ WWJ Car Rent รับรถสนามบินหาดใหญ่",
+    "src": "/images/optimized/home-hero-600.webp",
+    "thumbnail": "/images/optimized/home-hero-thumb.webp",
+    "width": 600,
+    "height": 345,
+    "srcSet": "/images/optimized/home-hero-600.webp 600w",
+    "sizes": "(max-width: 900px) 100vw, 52vw",
+    "variants": [
+      {
+        "width": 600,
+        "src": "/images/optimized/home-hero-600.webp"
+      }
+    ]
+  },
+  "identity-card": {
+    "alt": "เอกสารบัตรประชาชนสำหรับเช่ารถหาดใหญ่ WWJ Car Rent",
+    "src": "/images/optimized/identity-card-320.webp",
+    "thumbnail": "/images/optimized/identity-card-thumb.webp",
+    "width": 850,
+    "height": 558,
+    "srcSet": "/images/optimized/identity-card-320.webp 320w, /images/optimized/identity-card-640.webp 640w, /images/optimized/identity-card-850.webp 850w",
+    "sizes": "(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw",
+    "variants": [
+      {
+        "width": 320,
+        "src": "/images/optimized/identity-card-320.webp"
+      },
+      {
+        "width": 640,
+        "src": "/images/optimized/identity-card-640.webp"
+      },
+      {
+        "width": 850,
+        "src": "/images/optimized/identity-card-850.webp"
+      }
+    ]
+  },
+  "logo": {
+    "alt": "WWJ Car Rent Hat Yai logo",
+    "src": "/images/optimized/logo-1080.webp",
+    "thumbnail": "/images/optimized/logo-thumb.webp",
+    "width": 1080,
+    "height": 1080,
+    "srcSet": "/images/optimized/logo-96.webp 96w, /images/optimized/logo-160.webp 160w, /images/optimized/logo-320.webp 320w, /images/optimized/logo-1080.webp 1080w",
+    "sizes": "(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw",
+    "variants": [
+      {
+        "width": 96,
+        "src": "/images/optimized/logo-96.webp"
+      },
+      {
+        "width": 160,
+        "src": "/images/optimized/logo-160.webp"
+      },
+      {
+        "width": 320,
+        "src": "/images/optimized/logo-320.webp"
+      },
+      {
+        "width": 1080,
+        "src": "/images/optimized/logo-1080.webp"
+      }
+    ]
+  }
+}

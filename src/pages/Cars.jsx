@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import PageHeader from '../components/layout/PageHeader.jsx';
 import Section from '../components/layout/Section.jsx';
 import Seo from '../components/seo/Seo.jsx';
+import InternalLinkCluster from '../components/seo/InternalLinkCluster.jsx';
 import { cars } from '../data/cars.js';
 import CarFilters from '../features/cars/CarFilters.jsx';
 import CarGrid from '../features/cars/CarGrid.jsx';
@@ -58,6 +59,10 @@ export default function Cars() {
             <CarGrid cars={filteredCars} />
           </Stack>
         </Section>
+        <InternalLinkCluster
+          title="ข้อมูลรถเช่าหาดใหญ่ที่ควรรู้ก่อนจอง"
+          description="เปรียบเทียบรถเช่ารายวันหาดใหญ่ รถเช่าสนามบินหาดใหญ่ รถเช่าสงขลา และรถเช่ารายเดือน เพื่อเลือกรุ่นที่เหมาะกับทริปของคุณ"
+        />
       </Stack>
     </>
   );

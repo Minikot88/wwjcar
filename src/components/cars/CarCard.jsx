@@ -6,26 +6,31 @@ import { memo } from 'react';
 import { Link } from 'react-router';
 import { getFuelLabel, getTransmissionLabel } from '../../features/cars/carUtils.js';
 import { colors } from '../../theme/colors.js';
+import { getCarImageAsset, responsiveImageProps } from '../../utils/imageAssets.js';
 
 const formatter = new Intl.NumberFormat('th-TH');
 
 function CarCard({ car }) {
   const primaryBadge = car.categories?.[0] || 'รถเช่า';
+  const imageAsset = getCarImageAsset(car);
 
   return (
     <Box
       sx={{
         bgcolor: colors.canvas,
         borderRadius: '24px',
-        boxShadow: '0 18px 50px rgba(15, 17, 21, 0.065)',
+        boxShadow: '0 16px 44px rgba(15, 17, 21, 0.045)',
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
         overflow: 'hidden',
         transition: 'transform 180ms ease, box-shadow 180ms ease',
         '&:hover': {
-          transform: { md: 'translateY(-6px)' },
-          boxShadow: '0 26px 72px rgba(15, 17, 21, 0.12)'
+          transform: { md: 'translateY(-4px)' },
+          boxShadow: '0 24px 62px rgba(15, 17, 21, 0.085)',
+          img: {
+            transform: { md: 'scale(1.025)' }
+          }
         }
       }}
     >
@@ -33,11 +38,11 @@ function CarCard({ car }) {
         <Link to={`/cars/${car.slug}`} aria-label={`ดูรายละเอียด ${car.name}`}>
           <Box
             component="img"
-            src={car.image}
-            alt={`${car.name} รถเช่าหาดใหญ่`}
+            src={imageAsset?.src || car.image}
+            {...responsiveImageProps(imageAsset, `${car.name} รถเช่าหาดใหญ่ WWJ Car Rent`)}
             loading="lazy"
             sx={{
-              aspectRatio: '16 / 11',
+              aspectRatio: '16 / 10.5',
               bgcolor: colors.surfaceSoftLight,
               display: 'block',
               objectFit: 'cover',
@@ -50,19 +55,19 @@ function CarCard({ car }) {
           label={primaryBadge}
           sx={{
             position: 'absolute',
-            top: 16,
-            left: 16,
+            top: 18,
+            left: 18,
             borderRadius: '999px',
-            bgcolor: 'color-mix(in srgb, var(--wwj-bg) 92%, transparent)',
+            bgcolor: 'color-mix(in srgb, var(--wwj-bg) 88%, transparent)',
             color: 'text.primary',
-            fontWeight: 800,
-            boxShadow: '0 8px 18px rgba(15,17,21,0.1)',
+            fontWeight: 700,
+            boxShadow: 'none',
             backdropFilter: 'blur(12px)'
           }}
         />
       </Box>
 
-      <Stack spacing={2.25} sx={{ flex: 1, p: { xs: 2.5, md: 3 } }}>
+      <Stack spacing={2.5} sx={{ flex: 1, p: { xs: 2.75, md: 3.25 } }}>
         <Box>
           <Typography variant="caption" sx={{ color: colors.primary }}>
             {car.brand}
@@ -82,7 +87,7 @@ function CarCard({ car }) {
             เริ่มต้น
           </Typography>
           <Stack direction="row" spacing={0.75} sx={{ alignItems: 'baseline' }}>
-            <Typography sx={{ color: colors.primary, fontSize: '1.85rem', fontWeight: 900, lineHeight: 1.1 }}>
+            <Typography sx={{ color: colors.primary, fontSize: '1.75rem', fontWeight: 850, lineHeight: 1.1 }}>
               ฿{formatter.format(car.pricePerDay)}
             </Typography>
             <Typography color="text.secondary">/ วัน</Typography>
@@ -96,7 +101,7 @@ function CarCard({ car }) {
         </Stack>
 
         <Stack>
-          <Button component={Link} to={`/cars/${car.slug}`} variant="contained" fullWidth aria-label={`ดูรายละเอียด ${car.name}`}>
+          <Button component={Link} to={`/cars/${car.slug}`} variant="contained" fullWidth aria-label={`ดูรายละเอียด ${car.name}`} sx={{ mt: 0.5 }}>
             ดูรายละเอียด
           </Button>
         </Stack>
@@ -115,8 +120,8 @@ function Spec({ icon, label }) {
         bgcolor: colors.canvasElevated,
         borderRadius: '999px',
         color: colors.body,
-        px: 1.25,
-        py: 0.75
+        px: 1.35,
+        py: 0.85
       }}
     >
       {icon}

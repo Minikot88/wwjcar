@@ -3,6 +3,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useState } from 'react';
 import { Link } from 'react-router';
 import PageHeader from '../components/layout/PageHeader.jsx';
+import InternalLinkCluster from '../components/seo/InternalLinkCluster.jsx';
 import Seo from '../components/seo/Seo.jsx';
 import { faqItems } from '../data/faqs.js';
 import { createBreadcrumbSchema, createFaqSchema } from '../features/seo/schemas.js';
@@ -94,8 +95,8 @@ export default function FAQ() {
               '.MuiTab-root': {
                 borderRadius: '999px',
                 color: colors.body,
-                minHeight: 44,
-                px: 2.25,
+                minHeight: 46,
+                px: 2.5,
                 textTransform: 'none'
               },
               '.Mui-selected': {
@@ -113,8 +114,9 @@ export default function FAQ() {
             sx={{
               bgcolor: colors.canvas,
               borderRadius: '24px',
-              boxShadow: '0 18px 50px rgba(15,17,21,0.055)',
-              p: { xs: 1.25, md: 2 }
+              border: `1px solid ${colors.hairlineSoft}`,
+              boxShadow: 'none',
+              p: { xs: 1.25, md: 2.25 }
             }}
           >
             <Typography component="h2" variant="h2" sx={{ px: { xs: 1.5, md: 2 }, py: 2 }}>
@@ -139,7 +141,7 @@ export default function FAQ() {
                     }
                   }}
                 >
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls={`${panelId}-content`} id={`${panelId}-header`} sx={{ px: { xs: 1.5, md: 2 } }}>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls={`${panelId}-content`} id={`${panelId}-header`} sx={{ px: { xs: 1.5, md: 2.25 } }}>
                     <Typography component="span" variant="h3">
                       {item.question}
                     </Typography>
@@ -153,7 +155,7 @@ export default function FAQ() {
           </Box>
         </Box>
 
-        <Box sx={{ bgcolor: colors.canvas, borderRadius: '24px', boxShadow: '0 18px 50px rgba(15,17,21,0.055)', p: { xs: 3, md: 4 } }}>
+        <Box sx={{ bgcolor: colors.canvas, border: `1px solid ${colors.hairlineSoft}`, borderRadius: '24px', boxShadow: 'none', p: { xs: 3, md: 4.5 } }}>
           <Typography component="h2" variant="h2">
             ยังมีคำถามก่อนจอง?
           </Typography>
@@ -172,6 +174,11 @@ export default function FAQ() {
             </Button>
           </Stack>
         </Box>
+
+        <InternalLinkCluster
+          title="อ่านข้อมูลสำคัญก่อนเช่ารถ"
+          description="เปรียบเทียบรถเช่าหาดใหญ่ ดูเงื่อนไข เอกสารที่ใช้ และช่องทางติดต่อเพื่อจองรถกับ WWJ Car Rent"
+        />
       </Stack>
     </>
   );

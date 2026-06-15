@@ -22,8 +22,19 @@ export default function AdminUploads() {
     <AdminPanel title="ไฟล์อัปโหลด" description="อัปโหลดรูปภาพ โลโก้ Hero รูปรถ และแกลเลอรีไปยัง /uploads">
       <Stack spacing={3}>
         {message ? <Alert severity="success">{message}</Alert> : null}
-        <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr auto' }, alignItems: 'center' }}>
-          <Button variant="outlined" component="label">
+        <Box
+          sx={{
+            alignItems: 'center',
+            bgcolor: colors.canvasElevated,
+            border: `1px dashed ${colors.hairline}`,
+            borderRadius: '24px',
+            display: 'grid',
+            gap: 2,
+            gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr auto' },
+            p: { xs: 2.5, md: 3 }
+          }}
+        >
+          <Button variant="outlined" component="label" sx={{ bgcolor: colors.canvas }}>
             เลือกไฟล์
             <input hidden type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" onChange={(event) => setFile(event.target.files?.[0] || null)} />
           </Button>
@@ -33,10 +44,10 @@ export default function AdminUploads() {
           </Button>
         </Box>
         {file ? <Typography color="text.secondary">ไฟล์ที่เลือก: {file.name}</Typography> : null}
-        <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' } }}>
+        <Box sx={{ display: 'grid', gap: 2.5, gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' } }}>
           {data.map((item) => (
-            <Stack key={item.id} spacing={1.25} sx={{ bgcolor: colors.canvasElevated, borderRadius: '20px', p: 2 }}>
-              <Box component="img" src={item.fileUrl} alt={item.originalName} sx={{ aspectRatio: '4 / 3', borderRadius: '16px', objectFit: 'cover', width: '100%' }} />
+            <Stack key={item.id} spacing={1.4} sx={{ bgcolor: colors.canvasElevated, border: `1px solid ${colors.hairlineSoft}`, borderRadius: '22px', p: 1.5 }}>
+              <Box component="img" src={item.fileUrl} alt={item.originalName} sx={{ aspectRatio: '16 / 10', borderRadius: '18px', objectFit: 'cover', width: '100%' }} />
               <Typography sx={{ fontWeight: 750 }}>{item.originalName}</Typography>
               <Typography variant="caption" color="text.secondary">
                 {item.fileUrl}

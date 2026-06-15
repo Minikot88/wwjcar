@@ -18,7 +18,7 @@ export default function Footer() {
         bgcolor: colors.canvas,
         borderTop: `1px solid ${colors.hairlineSoft}`,
         color: colors.body,
-        py: { xs: 4.5, md: 5.5 }
+        py: { xs: 4, md: 5 }
       }}
     >
       <AppContainer size="editorial">
@@ -27,20 +27,20 @@ export default function Footer() {
             alignItems: { xs: 'flex-start', md: 'center' },
             display: 'flex',
             flexDirection: { xs: 'column', md: 'row' },
-            gap: { xs: 3, md: 5 },
+            gap: { xs: 3, md: 6 },
             justifyContent: 'space-between'
           }}
         >
-          <Stack spacing={1.5} sx={{ maxWidth: 520 }}>
-            <LogoFull markSize={{ xs: 36, md: 42 }} />
-            <Typography color="text.secondary" sx={{ lineHeight: 1.75 }}>
+          <Stack spacing={1.25} sx={{ maxWidth: 500 }}>
+            <LogoFull markSize={{ xs: 34, md: 38 }} />
+            <Typography color="text.secondary" sx={{ lineHeight: 1.8, maxWidth: 460 }}>
               รถเช่าหาดใหญ่สำหรับการเดินทางที่ง่าย สะอาด และมั่นใจ
             </Typography>
           </Stack>
 
           <Stack
             direction={{ xs: 'column', sm: 'row' }}
-            spacing={{ xs: 1.25, sm: 2.5 }}
+            spacing={{ xs: 1.25, sm: 3 }}
             sx={{
               alignItems: { xs: 'flex-start', sm: 'center' }
             }}
@@ -52,7 +52,7 @@ export default function Footer() {
                 to={item.href}
                 sx={{
                   color: colors.body,
-                  fontWeight: 650,
+                  fontWeight: 600,
                   textDecoration: 'none',
                   '&:hover': { color: colors.primary }
                 }}

@@ -4,7 +4,7 @@ export const siteConfig = {
   name: APP_NAME,
   description: 'รถเช่าหาดใหญ่ ราคาดี รับรถสนามบิน จองง่ายผ่าน LINE พร้อมบริการดูแลลูกค้า 24 ชั่วโมง',
   siteUrl: SITE_URL,
-  defaultOgImage: '/photo/wwj-carrent.webp'
+  defaultOgImage: '/images/optimized/home-hero-600.webp'
 };
 
 export const navigationItems = [

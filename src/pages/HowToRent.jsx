@@ -1,6 +1,7 @@
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router';
 import PageHeader from '../components/layout/PageHeader.jsx';
+import InternalLinkCluster from '../components/seo/InternalLinkCluster.jsx';
 import Seo from '../components/seo/Seo.jsx';
 import { createBreadcrumbSchema } from '../features/seo/schemas.js';
 import { colors } from '../theme/colors.js';
@@ -108,6 +109,11 @@ export default function HowToRent() {
             </Button>
           </Stack>
         </Box>
+
+        <InternalLinkCluster
+          title="ขั้นตอนต่อไปหลังเลือกวิธีเช่า"
+          description="ดูรถเช่าหาดใหญ่ทั้งหมด อ่านเงื่อนไขการเช่า หรือเช็คคำถามที่พบบ่อยก่อนติดต่อจองรถผ่าน LINE"
+        />
       </Stack>
     </>
   );

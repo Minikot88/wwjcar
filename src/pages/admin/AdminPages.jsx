@@ -11,6 +11,11 @@ const emptyPage = {
   title: '',
   metaTitle: '',
   metaDescription: '',
+  canonical: '',
+  ogTitle: '',
+  ogDescription: '',
+  ogImage: '',
+  schema: '{}',
   content: '{}',
   status: 'published'
 };
@@ -23,12 +28,17 @@ export default function AdminPages() {
 
   const selectPage = (page) => {
     setSelected(page.id);
-    setForm({ ...page, content: JSON.stringify(page.content || {}, null, 2) });
+    setForm({
+      ...page,
+      schema: JSON.stringify(page.schema || {}, null, 2),
+      content: JSON.stringify(page.content || {}, null, 2)
+    });
     setMessage('');
   };
 
   const payload = () => ({
     ...form,
+    schema: parseJsonInput(form.schema, {}),
     content: parseJsonInput(form.content, {})
   });
 
@@ -78,6 +88,11 @@ export default function AdminPages() {
             <TextField label="Title" value={form.title} onChange={(event) => update('title', event.target.value)} required />
             <TextField label="Meta Title" value={form.metaTitle || ''} onChange={(event) => update('metaTitle', event.target.value)} />
             <TextField label="Meta Description" value={form.metaDescription || ''} onChange={(event) => update('metaDescription', event.target.value)} multiline minRows={3} />
+            <TextField label="Canonical URL" value={form.canonical || ''} onChange={(event) => update('canonical', event.target.value)} />
+            <TextField label="OG Title" value={form.ogTitle || ''} onChange={(event) => update('ogTitle', event.target.value)} />
+            <TextField label="OG Description" value={form.ogDescription || ''} onChange={(event) => update('ogDescription', event.target.value)} multiline minRows={2} />
+            <TextField label="OG Image" value={form.ogImage || ''} onChange={(event) => update('ogImage', event.target.value)} />
+            <JsonEditor label="Schema JSON" value={form.schema} onChange={(value) => update('schema', value)} />
             <JsonEditor label="Content JSON" value={form.content} onChange={(value) => update('content', value)} />
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
               <Button variant="contained" onClick={save}>

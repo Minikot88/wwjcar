@@ -45,7 +45,14 @@ const carSlugs = [
   'mitsubishi-attrage'
 ];
 
-const blogSlugs = ['hat-yai-airport-car-rental', 'hat-yai-driving-guide'];
+const blogSlugs = [
+  'hat-yai-airport-car-rental',
+  'hat-yai-driving-guide',
+  'monthly-car-rental-hat-yai',
+  'hat-yai-to-betong-car-rental',
+  'hat-yai-to-pak-bara-car-rental',
+  'malaysian-tourist-car-rental-hat-yai'
+];
 
 const siteUrl = await readSiteUrl();
 const today = new Date().toISOString().slice(0, 10);

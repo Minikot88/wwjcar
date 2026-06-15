@@ -25,22 +25,22 @@ export const colors = {
 export const modeColors = {
   light: {
     background: '#FFFFFF',
-    surface: '#F7F8FA',
-    surfaceStrong: '#EEF1F5',
+    surface: '#F8F9FB',
+    surfaceStrong: '#F1F3F6',
     text: '#212121',
-    muted: '#5F6673',
-    mutedSoft: '#7B8493',
-    border: '#E3E7EE',
-    borderSoft: '#EEF1F5'
+    muted: '#626A76',
+    mutedSoft: '#8A929E',
+    border: '#E6E9EF',
+    borderSoft: '#F0F2F5'
   },
   dark: {
     background: '#0F1115',
-    surface: '#171A21',
-    surfaceStrong: '#20242D',
-    text: '#FFFFFF',
-    muted: '#B8B8B8',
-    mutedSoft: '#8F949E',
-    border: '#2A2F3A',
-    borderSoft: '#343A46'
+    surface: '#171A20',
+    surfaceStrong: '#20242C',
+    text: '#F7F8FA',
+    muted: '#B4BAC4',
+    mutedSoft: '#89909C',
+    border: '#282D36',
+    borderSoft: '#222730'
   }
 };

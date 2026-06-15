@@ -1,6 +1,7 @@
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router';
 import { useParams } from 'react-router';
+import InternalLinkCluster from '../components/seo/InternalLinkCluster.jsx';
 import Seo from '../components/seo/Seo.jsx';
 import CarBreadcrumbs from '../features/cars/CarBreadcrumbs.jsx';
 import CarDetailHero from '../features/cars/CarDetailHero.jsx';
@@ -46,6 +47,10 @@ export default function CarDetail() {
         <CarDetailHero car={car} />
         <CarRentalDecisionSection car={car} />
         <RelatedCars car={car} />
+        <InternalLinkCluster
+          title={`ข้อมูลเพิ่มเติมก่อนจอง ${car.name}`}
+          description="อ่านเงื่อนไขการเช่า คำถามที่พบบ่อย และตัวเลือกเช่ารายเดือนหรือรถเช่าสำหรับลูกค้ามาเลเซียก่อนยืนยันการจอง"
+        />
       </Stack>
     </>
   );

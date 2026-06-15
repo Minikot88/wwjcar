@@ -34,19 +34,19 @@ export default function Header() {
       position="sticky"
       elevation={0}
       sx={{
-        bgcolor: 'color-mix(in srgb, var(--wwj-bg) 86%, transparent)',
+        bgcolor: 'color-mix(in srgb, var(--wwj-bg) 88%, transparent)',
         color: 'text.primary',
         borderBottom: `1px solid ${colors.hairlineSoft}`,
         backgroundImage: 'none',
-        backdropFilter: 'blur(18px)',
-        boxShadow: '0 8px 28px rgba(15,17,21,0.035)',
+        backdropFilter: 'blur(20px)',
+        boxShadow: 'none',
         '.MuiButton-root': {
           borderRadius: '999px'
         }
       }}
     >
       <AppContainer size="editorial" sx={{ py: 0 }}>
-        <Toolbar disableGutters sx={{ minHeight: { xs: 66, md: 78 }, gap: { xs: 1, md: 2.5 } }}>
+        <Toolbar disableGutters sx={{ minHeight: { xs: 68, md: 82 }, gap: { xs: 1, md: 3 } }}>
           <LogoFull
             priority
             sx={{
@@ -62,7 +62,7 @@ export default function Header() {
               alignItems: 'center',
               display: { xs: 'none', lg: 'flex' },
               flex: 1,
-              gap: 0.25,
+              gap: 0.5,
               justifyContent: 'center'
             }}
           >
@@ -73,16 +73,27 @@ export default function Header() {
                 to={item.href}
                 color="inherit"
                 sx={{
-                  fontSize: '0.92rem',
-                  fontWeight: 700,
+                  fontSize: '0.9rem',
+                  fontWeight: 650,
                   minHeight: 44,
-                  px: 1.5,
+                  px: 1.75,
                   color: colors.body,
                   borderRadius: '999px',
                   position: 'relative',
                   '&.active': {
                     color: colors.primary,
-                    bgcolor: 'rgba(255,0,0,0.07)'
+                    bgcolor: 'transparent',
+                    '&::after': {
+                      bgcolor: colors.primary,
+                      borderRadius: '999px',
+                      bottom: 5,
+                      content: '""',
+                      height: 3,
+                      left: '50%',
+                      position: 'absolute',
+                      transform: 'translateX(-50%)',
+                      width: 18
+                    }
                   },
                   '&:hover': {
                     color: colors.primary,
@@ -95,7 +106,7 @@ export default function Header() {
             ))}
           </Box>
 
-          <Box sx={{ alignItems: 'center', display: { xs: 'none', md: 'flex' }, gap: 1.25, ml: { md: 'auto', lg: 2.5 } }}>
+          <Box sx={{ alignItems: 'center', display: { xs: 'none', md: 'flex' }, gap: 1, ml: { md: 'auto', lg: 3 } }}>
             <Button
               component="a"
               href={contactActions.line.href}
@@ -104,7 +115,7 @@ export default function Header() {
               aria-label={contactActions.line.ariaLabel}
               sx={{
                 minHeight: 44,
-                px: 2,
+                px: 2.25,
                 color: 'text.primary',
                 bgcolor: 'transparent',
                 '&:hover': { bgcolor: colors.canvasElevated }
@@ -119,7 +130,7 @@ export default function Header() {
               variant="contained"
               color="primary"
               aria-label="จองรถเช่าผ่าน LINE"
-              sx={{ minHeight: 46, px: 3, boxShadow: '0 14px 30px rgba(255,0,0,0.18)' }}
+              sx={{ minHeight: 46, px: 3.25, boxShadow: '0 12px 26px rgba(255,0,0,0.14)' }}
             >
               จองรถ
             </Button>
@@ -169,12 +180,13 @@ export default function Header() {
             bgcolor: colors.canvas,
             color: 'text.primary',
             borderLeft: `1px solid ${colors.hairline}`,
-            borderRadius: '24px 0 0 24px'
+            borderRadius: '28px 0 0 28px',
+            boxShadow: 'none'
           }
         }}
       >
-        <Box sx={{ width: { xs: 320, sm: 360 }, p: 2 }} role="presentation">
-          <Box sx={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+        <Box sx={{ width: { xs: 320, sm: 380 }, p: 2.5 }} role="presentation">
+          <Box sx={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between', mb: 2 }}>
             <LogoFull markSize={{ xs: 34, md: 40 }} />
           </Box>
           <List>
@@ -185,8 +197,10 @@ export default function Header() {
                 to={item.href}
                 onClick={closeDrawer}
                 sx={{
+                  borderRadius: '16px',
                   minHeight: 56,
                   '&.active': {
+                    bgcolor: 'rgba(255,0,0,0.06)',
                     color: colors.primary
                   }
                 }}
@@ -204,8 +218,10 @@ export default function Header() {
                 to={item.href}
                 onClick={closeDrawer}
                 sx={{
+                  borderRadius: '16px',
                   minHeight: 52,
                   '&.active': {
+                    bgcolor: 'rgba(255,0,0,0.06)',
                     color: colors.primary
                   }
                 }}

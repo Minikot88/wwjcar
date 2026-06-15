@@ -1,6 +1,7 @@
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router';
 import PageHeader from '../components/layout/PageHeader.jsx';
+import InternalLinkCluster from '../components/seo/InternalLinkCluster.jsx';
 import Seo from '../components/seo/Seo.jsx';
 import { createBreadcrumbSchema } from '../features/seo/schemas.js';
 import { colors } from '../theme/colors.js';
@@ -108,6 +109,11 @@ export default function RentalConditions() {
             </Button>
           </Stack>
         </Box>
+
+        <InternalLinkCluster
+          title="ต่อยอดจากเงื่อนไขการเช่า"
+          description="เลือกประเภทรถที่เหมาะกับทริป อ่าน FAQ หรือสอบถามทีมงานเพื่อเช็คเงินมัดจำและรถว่างก่อนจอง"
+        />
       </Stack>
     </>
   );

@@ -1,8 +1,9 @@
 import { Box, Typography } from '@mui/material';
 import { NavLink } from 'react-router';
 import { colors } from '../../theme/colors.js';
+import { getImageAsset, responsiveImageProps } from '../../utils/imageAssets.js';
 
-const logoImage = '/images/brand/logo.png';
+const logoImage = getImageAsset('logo');
 
 function LogoRoot({ to, label = 'WWJ Car Rent', children, sx }) {
   return (
@@ -40,8 +41,8 @@ export function LogoMark({ to = '/', size = { xs: 34, md: 40 }, priority = false
       >
         <Box
           component="img"
-          src={logoImage}
-          alt="WWJ Car Rent"
+          src={logoImage.src}
+          {...responsiveImageProps(logoImage, 'WWJ Car Rent Hat Yai logo')}
           loading={priority ? 'eager' : 'lazy'}
           sx={{
             display: 'block',

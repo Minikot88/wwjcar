@@ -98,26 +98,27 @@ export function createMuiTheme(colorMode = 'light') {
       styleOverrides: {
         root: {
           minHeight: 48,
-          borderRadius: '24px',
-          padding: `${spacing.xs - 2}px ${spacing.md}px`,
+          borderRadius: '999px',
+          padding: `${spacing.xs - 1}px ${spacing.md}px`,
           textTransform: 'none',
           boxShadow: 'none',
+          fontWeight: 700,
           '&.Mui-focusVisible': {
             outline: `3px solid ${colors.primary}`,
             outlineOffset: 2
           }
         },
         containedPrimary: {
-          boxShadow: mode === 'dark' ? 'none' : '0 14px 28px rgba(255, 0, 0, 0.18)',
+          boxShadow: mode === 'dark' ? 'none' : '0 12px 26px rgba(255, 0, 0, 0.14)',
           '&:hover': {
             backgroundColor: colors.primaryHover,
-            boxShadow: mode === 'dark' ? 'none' : '0 18px 36px rgba(255, 0, 0, 0.22)'
+            boxShadow: mode === 'dark' ? 'none' : '0 16px 34px rgba(255, 0, 0, 0.18)'
           }
         },
         outlined: {
           borderColor: colors.hairline,
           color: colors.ink,
-          backgroundColor: colors.canvas
+          backgroundColor: 'transparent'
         }
       }
     },
@@ -125,7 +126,8 @@ export function createMuiTheme(colorMode = 'light') {
       styleOverrides: {
         root: {
           borderRadius: '24px',
-          boxShadow: mode === 'dark' ? 'none' : '0 18px 45px rgba(15, 17, 21, 0.08)'
+          backgroundImage: 'none',
+          boxShadow: mode === 'dark' ? 'none' : '0 18px 45px rgba(15, 17, 21, 0.055)'
         }
       }
     },
@@ -151,7 +153,7 @@ export function createMuiTheme(colorMode = 'light') {
     MuiAccordion: {
       styleOverrides: {
         root: {
-          borderRadius: '18px',
+          borderRadius: '20px',
           border: `1px solid ${colors.hairlineSoft}`,
           boxShadow: 'none',
           marginBottom: 10,
@@ -165,7 +167,7 @@ export function createMuiTheme(colorMode = 'light') {
     MuiAccordionSummary: {
       styleOverrides: {
         root: {
-          minHeight: 64,
+          minHeight: 68,
           paddingLeft: spacing.sm,
           paddingRight: spacing.sm
         }
@@ -175,6 +177,53 @@ export function createMuiTheme(colorMode = 'light') {
       styleOverrides: {
         root: {
           padding: `${spacing.xs}px ${spacing.sm}px ${spacing.sm}px`
+        }
+      }
+    },
+    MuiTextField: {
+      defaultProps: {
+        variant: 'outlined'
+      }
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          borderRadius: '18px',
+          backgroundColor: mode === 'dark' ? modePalette.surface : '#FFFFFF',
+          transition: 'border-color 160ms ease, background-color 160ms ease',
+          '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: modePalette.border
+          },
+          '&:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: modePalette.mutedSoft
+          },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: colors.primary,
+            borderWidth: 1
+          }
+        }
+      }
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          borderBottomColor: modePalette.borderSoft,
+          paddingBottom: spacing.xs,
+          paddingTop: spacing.xs
+        },
+        head: {
+          backgroundColor: modePalette.background,
+          color: modePalette.muted,
+          fontSize: '0.78rem',
+          fontWeight: 750
+        }
+      }
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          borderRadius: '999px',
+          fontWeight: 700
         }
       }
     }
