@@ -1,0 +1,136 @@
+{
+  "version": 1,
+  "updatedAt": "2026-06-15",
+  "admin": {
+    "email": "admin@wwjcarrent.local",
+    "password": "ChangeMe123!",
+    "name": "WWJ Admin",
+    "role": "admin"
+  },
+  "settings": [
+    {
+      "key": "contact",
+      "value": {
+        "phone": "กรุณาตั้งค่าเบอร์โทร",
+        "line": "กรุณาตั้งค่า LINE ID",
+        "whatsapp": "กรุณาตั้งค่า WhatsApp",
+        "facebook": "",
+        "email": "",
+        "googleMaps": "",
+        "businessHours": "เปิดบริการทุกวัน",
+        "footerText": "รถเช่าหาดใหญ่สำหรับการเดินทางที่ง่าย สะอาด และมั่นใจ"
+      }
+    },
+    {
+      "key": "seoDefaults",
+      "value": {
+        "title": "รถเช่าหาดใหญ่ | WWJ Car Rent",
+        "description": "รถเช่าหาดใหญ่ ราคาดี รับรถสนามบิน จองง่ายผ่าน LINE",
+        "ogImage": "/photo/wwj-carrent.webp"
+      }
+    },
+    {
+      "key": "home",
+      "value": {
+        "heroTitle": "รถเช่าหาดใหญ่ จองง่าย รับรถไว",
+        "heroSubtitle": "รับรถสนามบินหาดใหญ่ เลือกรถสะดวก และคุยกับทีมงานได้โดยตรงก่อนจอง",
+        "heroImage": "/photo/wwj-carrent.webp",
+        "primaryCtaText": "จองผ่าน LINE",
+        "secondaryCtaText": "ดูรถทั้งหมด",
+        "trustItems": ["รถสะอาด", "รับรถสนามบิน", "จองผ่าน LINE"]
+      }
+    },
+    {
+      "key": "about",
+      "value": {
+        "companyStory": "WWJ Car Rent ให้บริการรถเช่าในหาดใหญ่สำหรับลูกค้าที่ต้องการความสะดวก รวดเร็ว และมั่นใจ",
+        "serviceAreas": ["หาดใหญ่", "สงขลา", "สนามบินหาดใหญ่", "ปากบารา", "เบตง"],
+        "airportPickupContent": "รองรับการนัดรับรถที่สนามบินหาดใหญ่ตามเวลาที่ลูกค้าแจ้งล่วงหน้า",
+        "customerFirstPhilosophy": "คุยง่าย แจ้งเงื่อนไขชัดเจน และช่วยเลือกรถให้เหมาะกับทริป",
+        "whyChooseWWJ": ["รถสะอาดพร้อมใช้งาน", "จองง่ายผ่าน LINE", "เหมาะกับลูกค้าท้องถิ่นและนักท่องเที่ยว"]
+      }
+    }
+  ],
+  "faqCategories": [
+    { "id": 1, "name": "การจอง", "slug": "booking", "sortOrder": 1 },
+    { "id": 2, "name": "เอกสาร", "slug": "documents", "sortOrder": 2 },
+    { "id": 3, "name": "การรับรถ", "slug": "pickup", "sortOrder": 3 },
+    { "id": 4, "name": "การคืนรถ", "slug": "return", "sortOrder": 4 },
+    { "id": 5, "name": "ประกันภัย", "slug": "insurance", "sortOrder": 5 },
+    { "id": 6, "name": "ชาวต่างชาติ", "slug": "foreigners", "sortOrder": 6 },
+    { "id": 7, "name": "การเดินทาง", "slug": "travel", "sortOrder": 7 }
+  ],
+  "pages": [
+    {
+      "id": 1,
+      "slug": "about-us",
+      "title": "เกี่ยวกับเรา",
+      "metaTitle": "เกี่ยวกับเรา | WWJ Car Rent",
+      "metaDescription": "รู้จัก WWJ Car Rent รถเช่าหาดใหญ่ รับรถสนามบิน และบริการลูกค้าแบบเป็นกันเอง",
+      "content": {
+        "sections": ["companyStory", "serviceAreas", "airportPickup", "whyChooseWWJ"]
+      },
+      "status": "published"
+    },
+    {
+      "id": 2,
+      "slug": "rental-conditions",
+      "title": "เงื่อนไขการเช่า",
+      "metaTitle": "เงื่อนไขการเช่ารถ | WWJ Car Rent",
+      "metaDescription": "เอกสาร เงินมัดจำ ประกันภัย น้ำมัน และการคืนรถสำหรับรถเช่าหาดใหญ่",
+      "content": {
+        "sections": ["documents", "deposit", "insurance", "fuel", "lateReturn"]
+      },
+      "status": "published"
+    }
+  ],
+  "rentalConditions": [
+    {
+      "id": 1,
+      "sectionKey": "documents",
+      "title": "เอกสารที่ใช้",
+      "content": ["บัตรประชาชนหรือพาสปอร์ต", "ใบขับขี่ตัวจริง", "ข้อมูลติดต่อผู้เช่า"],
+      "sortOrder": 1
+    },
+    {
+      "id": 2,
+      "sectionKey": "deposit",
+      "title": "เงินมัดจำ",
+      "content": ["แจ้งยอดชัดเจนก่อนยืนยันการจอง", "คืนตามเงื่อนไขหลังตรวจรับรถ"],
+      "sortOrder": 2
+    },
+    {
+      "id": 3,
+      "sectionKey": "insurance",
+      "title": "ประกันภัย",
+      "content": ["รถมีประกันภัยตามเงื่อนไขกรมธรรม์", "ความเสียหายจากการใช้งานผิดเงื่อนไขผู้เช่ารับผิดชอบ"],
+      "sortOrder": 3
+    },
+    {
+      "id": 4,
+      "sectionKey": "fuel",
+      "title": "นโยบายน้ำมัน",
+      "content": ["รับรถน้ำมันระดับใด คืนระดับเดียวกัน"],
+      "sortOrder": 4
+    },
+    {
+      "id": 5,
+      "sectionKey": "late-return",
+      "title": "คืนรถล่าช้า",
+      "content": ["กรุณาแจ้งล่วงหน้าหากต้องการเลื่อนเวลาคืนรถ"],
+      "sortOrder": 5
+    }
+  ],
+  "reviews": [
+    {
+      "id": 1,
+      "customerName": "ลูกค้า WWJ",
+      "rating": 5,
+      "content": "จองง่าย รับรถสะดวก รถสะอาด เหมาะกับทริปหาดใหญ่",
+      "source": "Mock Review",
+      "sortOrder": 1,
+      "status": "published"
+    }
+  ],
+  "uploads": []
+}

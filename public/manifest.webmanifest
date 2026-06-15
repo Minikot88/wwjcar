@@ -1,0 +1,19 @@
+{
+  "name": "WWJ Car Rent",
+  "short_name": "WWJ Car Rent",
+  "description": "รถเช่าหาดใหญ่ รับรถสนามบินหาดใหญ่ จองง่ายผ่าน LINE",
+  "lang": "th",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#FF0000",
+  "icons": [
+    {
+      "src": "/photo/wwj-carrent.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any"
+    }
+  ]
+}
