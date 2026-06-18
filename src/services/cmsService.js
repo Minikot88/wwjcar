@@ -1,285 +1,181 @@
-import { clearAdminToken, setAdminToken } from './apiClient.js';
+import { apiDownload, apiRequest, clearAdminToken, emitCmsUpdated, setAdminToken } from './apiClient.js';
 
-const STORAGE_KEY = 'wwj_mock_cms_v1';
-const MOCK_ADMIN = {
-  email: 'admin@wwjcarrent.local',
-  password: 'ChangeMe123!',
-  name: 'WWJ Admin',
-  role: 'admin'
-};
-
-let cachedSeed = null;
-let cachedInitialState = null;
-
-function clone(value) {
-  return JSON.parse(JSON.stringify(value));
+function includeDraftsQuery(includeDrafts) {
+  return includeDrafts ? { includeDrafts: true } : undefined;
 }
 
-async function loadSeedData() {
-  if (cachedSeed) return cachedSeed;
-
-  const [{ default: cmsSeed }, { cars: staticCars }, { faqItems }] = await Promise.all([
-    import('../data/cms/cmsSeed.json'),
-    import('../data/cars.js'),
-    import('../data/faqs.js')
-  ]);
-
-  cachedSeed = { cmsSeed, staticCars, faqItems };
-  return cachedSeed;
-}
-
-async function createInitialState() {
-  if (cachedInitialState) return clone(cachedInitialState);
-
-  const { cmsSeed, staticCars, faqItems } = await loadSeedData();
-  cachedInitialState = {
-    cars: staticCars.map((car, index) => ({
-      ...car,
-      id: index + 1,
-      coverImage: car.image,
-      description: `${car.name} รถเช่าหาดใหญ่สำหรับเดินทางในเมือง สนามบิน และจังหวัดใกล้เคียง`,
-      featured: index < 6,
-      airportPickup: true,
-      monthlyRental: car.categories?.some((category) => category.includes('รายเดือน')) || false,
-      status: 'published'
-    })),
-    faqs: faqItems.map((item, index) => ({
-      id: index + 1,
-      categoryId: guessFaqCategoryId(item.question, item.answer),
-      question: item.question,
-      answer: item.answer,
-      sortOrder: index + 1,
-      status: 'published'
-    })),
-    faqCategories: cmsSeed.faqCategories,
-    settings: cmsSeed.settings,
-    pages: cmsSeed.pages,
-    rentalConditions: cmsSeed.rentalConditions,
-    reviews: cmsSeed.reviews,
-    uploads: cmsSeed.uploads
-  };
-
-  return clone(cachedInitialState);
-}
-
-function guessFaqCategoryId(question, answer) {
-  const text = `${question} ${answer}`;
-  if (text.includes('เอกสาร') || text.includes('ใบขับขี่') || text.includes('พาสปอร์ต')) return 2;
-  if (text.includes('รับรถ') || text.includes('สนามบิน')) return 3;
-  if (text.includes('คืนรถ') || text.includes('น้ำมัน')) return 4;
-  if (text.includes('ประกัน') || text.includes('อุบัติเหตุ')) return 5;
-  if (text.includes('ต่างชาติ') || text.includes('มาเลเซีย') || text.includes('WhatsApp')) return 6;
-  if (text.includes('เบตง') || text.includes('ปากบารา') || text.includes('ข้ามจังหวัด')) return 7;
-  return 1;
-}
-
-async function readState() {
-  const saved = localStorage.getItem(STORAGE_KEY);
-  const initialState = await createInitialState();
-
-  if (!saved) {
-    writeState(initialState);
-    return initialState;
-  }
-
-  try {
-    return {
-      ...initialState,
-      ...JSON.parse(saved)
-    };
-  } catch {
-    writeState(initialState);
-    return initialState;
-  }
-}
-
-function writeState(nextState) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(nextState));
-  window.dispatchEvent(new CustomEvent('wwj:mock-cms-updated'));
-}
-
-function resolveFast(value) {
-  return Promise.resolve(clone(value));
-}
-
-function nextId(items) {
-  return Math.max(0, ...items.map((item) => Number(item.id) || 0)) + 1;
-}
-
-async function mutate(collection, action) {
-  const state = await readState();
-  const result = action(state[collection], state);
-  writeState(state);
-  return resolveFast(result);
-}
-
-function publicItems(items) {
-  return items.filter((item) => item.status !== 'draft');
+async function mutate(request) {
+  const result = await request();
+  emitCmsUpdated();
+  return result;
 }
 
 export const cmsService = {
   login: async (credentials) => {
-    if (credentials.email !== MOCK_ADMIN.email || credentials.password !== MOCK_ADMIN.password) {
-      throw new Error('อีเมลหรือรหัสผ่านไม่ถูกต้อง');
-    }
+    const result = await apiRequest('/auth/login', {
+      method: 'POST',
+      body: credentials
+    });
+    const token = result.accessToken || result.token;
+    if (token) setAdminToken(token);
+    return { token, user: result.user };
+  },
 
-    const token = `mock-admin-token-${Date.now()}`;
-    setAdminToken(token);
-    return resolveFast({
-      token,
-      user: {
-        name: MOCK_ADMIN.name,
-        email: MOCK_ADMIN.email,
-        role: MOCK_ADMIN.role
-      }
+  logout: async () => {
+    try {
+      await apiRequest('/auth/logout', { method: 'POST', auth: true });
+    } finally {
+      clearAdminToken();
+    }
+  },
+
+  getDashboard: () => apiRequest('/dashboard', { auth: true }),
+  getCurrentAdmin: () => apiRequest('/auth/me', { auth: true }),
+  getAvailability: (query) => apiRequest('/availability', { query }),
+
+  getCars: (includeDrafts = false) => apiRequest('/cars', { query: includeDraftsQuery(includeDrafts) }),
+  getCar: (slug) => apiRequest(`/cars/${slug}`),
+  createCar: (payload) => mutate(() => apiRequest('/cars', { method: 'POST', auth: true, body: payload })),
+  updateCar: (id, payload) => mutate(() => apiRequest(`/cars/${id}`, { method: 'PUT', auth: true, body: payload })),
+  deleteCar: (id) => mutate(() => apiRequest(`/cars/${id}`, { method: 'DELETE', auth: true })),
+  uploadCarCover: (id, file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return mutate(() => apiRequest(`/cars/${id}/cover-image`, { method: 'POST', auth: true, body: formData }));
+  },
+  uploadCarGallery: (id, file, payload = {}) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    Object.entries(payload).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) formData.append(key, value);
     });
+    return mutate(() => apiRequest(`/cars/${id}/gallery-images`, { method: 'POST', auth: true, body: formData }));
   },
-  logout: () => clearAdminToken(),
-  getDashboard: async () => {
-    const state = await readState();
-    return resolveFast({
-      carsCount: state.cars.length,
-      faqCount: state.faqs.length,
-      reviewsCount: state.reviews.length,
-      pagesCount: state.pages.length,
-      siteSettingsCount: state.settings.length
+  replaceCarImage: (id, file, payload = {}) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    Object.entries(payload).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) formData.append(key, value);
     });
+    return mutate(() => apiRequest(`/car-images/${id}`, { method: 'PUT', auth: true, body: formData }));
   },
-  getCars: async (includeDrafts = false) => {
-    const cars = (await readState()).cars;
-    return resolveFast(includeDrafts ? cars : publicItems(cars));
-  },
-  getCar: async (slug) => {
-    const car = (await readState()).cars.find((item) => item.slug === slug);
-    return resolveFast(car || null);
-  },
-  createCar: (payload) =>
-    mutate('cars', (items) => {
-      const created = { ...payload, id: nextId(items), image: payload.coverImage || payload.image, status: payload.status || 'published' };
-      items.push(created);
-      return created;
-    }),
-  updateCar: (id, payload) =>
-    mutate('cars', (items) => {
-      const index = items.findIndex((item) => String(item.id) === String(id));
-      if (index === -1) throw new Error('ไม่พบข้อมูลรถ');
-      items[index] = { ...items[index], ...payload, image: payload.coverImage || payload.image || items[index].image };
-      return items[index];
-    }),
-  deleteCar: (id) =>
-    mutate('cars', (items) => {
-      const index = items.findIndex((item) => String(item.id) === String(id));
-      if (index !== -1) items.splice(index, 1);
-      return null;
-    }),
-  getFaqs: async (includeDrafts = false) => {
-    const state = await readState();
-    const faqs = (includeDrafts ? state.faqs : publicItems(state.faqs)).map((faq) => {
-      const category = state.faqCategories.find((item) => item.id === Number(faq.categoryId));
-      return {
-        ...faq,
-        categoryName: category?.name,
-        categorySlug: category?.slug
-      };
+  reorderCarGallery: (id, images) => mutate(() => apiRequest(`/cars/${id}/gallery-images/order`, { method: 'PUT', auth: true, body: { images } })),
+  deleteCarImage: (id) => mutate(() => apiRequest(`/car-images/${id}`, { method: 'DELETE', auth: true })),
+  getBookings: (query = {}) => apiRequest('/bookings', { auth: true, query }),
+  getBooking: (id) => apiRequest(`/bookings/${id}`, { auth: true }),
+  createBooking: (payload) => mutate(() => apiRequest('/bookings', { method: 'POST', auth: true, body: payload })),
+  updateBooking: (id, payload) => mutate(() => apiRequest(`/bookings/${id}`, { method: 'PUT', auth: true, body: payload })),
+  deleteBooking: (id) => mutate(() => apiRequest(`/bookings/${id}`, { method: 'DELETE', auth: true })),
+  markBookingReturned: (id) => mutate(() => apiRequest(`/bookings/${id}/returned`, { method: 'POST', auth: true })),
+  markBookingCancelled: (id) => mutate(() => apiRequest(`/bookings/${id}/cancelled`, { method: 'POST', auth: true })),
+  getVehicleCalendar: (id, query = {}) => apiRequest(`/vehicles/${id}/calendar`, { query }),
+  getMaintenanceRecords: (query = {}) => apiRequest('/maintenance', { auth: true, query }),
+  getMaintenanceRecord: (id) => apiRequest(`/maintenance/${id}`, { auth: true }),
+  createMaintenanceRecord: (payload) => mutate(() => apiRequest('/maintenance', { method: 'POST', auth: true, body: payload })),
+  updateMaintenanceRecord: (id, payload) => mutate(() => apiRequest(`/maintenance/${id}`, { method: 'PUT', auth: true, body: payload })),
+  deleteMaintenanceRecord: (id) => mutate(() => apiRequest(`/maintenance/${id}`, { method: 'DELETE', auth: true })),
+  getBusinessReport: () => apiRequest('/business/reports/summary', { auth: true }),
+  getCustomerSummary: () => apiRequest('/business/customers/summary', { auth: true }),
+  getCustomers: (query = {}) => apiRequest('/business/customers', { auth: true, query }),
+  getCustomer: (id) => apiRequest(`/business/customers/${id}`, { auth: true }),
+  createCustomer: (payload) => mutate(() => apiRequest('/business/customers', { method: 'POST', auth: true, body: payload })),
+  updateCustomer: (id, payload) => mutate(() => apiRequest(`/business/customers/${id}`, { method: 'PUT', auth: true, body: payload })),
+  deleteCustomer: (id) => mutate(() => apiRequest(`/business/customers/${id}`, { method: 'DELETE', auth: true })),
+  getCustomerNotes: (id) => apiRequest(`/business/customers/${id}/notes`, { auth: true }),
+  getCustomerHistory: (id) => apiRequest(`/business/customers/${id}/history`, { auth: true }),
+  createCustomerNote: (id, payload) => mutate(() => apiRequest(`/business/customers/${id}/notes`, { method: 'POST', auth: true, body: payload })),
+  getContracts: (query = {}) => apiRequest('/business/contracts', { auth: true, query }),
+  getContract: (id) => apiRequest(`/business/contracts/${id}`, { auth: true }),
+  createContract: (payload) => mutate(() => apiRequest('/business/contracts', { method: 'POST', auth: true, body: payload })),
+  updateContract: (id, payload) => mutate(() => apiRequest(`/business/contracts/${id}`, { method: 'PUT', auth: true, body: payload })),
+  deleteContract: (id) => mutate(() => apiRequest(`/business/contracts/${id}`, { method: 'DELETE', auth: true })),
+  createContractAttachment: (id, payload) => mutate(() => apiRequest(`/business/contracts/${id}/attachments`, { method: 'POST', auth: true, body: payload })),
+  getExpenseSummary: () => apiRequest('/business/expenses/summary', { auth: true }),
+  getExpenses: (query = {}) => apiRequest('/business/expenses', { auth: true, query }),
+  getExpense: (id) => apiRequest(`/business/expenses/${id}`, { auth: true }),
+  createExpense: (payload) => mutate(() => apiRequest('/business/expenses', { method: 'POST', auth: true, body: payload })),
+  updateExpense: (id, payload) => mutate(() => apiRequest(`/business/expenses/${id}`, { method: 'PUT', auth: true, body: payload })),
+  deleteExpense: (id) => mutate(() => apiRequest(`/business/expenses/${id}`, { method: 'DELETE', auth: true })),
+
+  getFaqs: (includeDrafts = false) => apiRequest('/faqs', { query: includeDraftsQuery(includeDrafts) }),
+  createFaq: (payload) => mutate(() => apiRequest('/faqs', { method: 'POST', auth: true, body: payload })),
+  updateFaq: (id, payload) => mutate(() => apiRequest(`/faqs/${id}`, { method: 'PUT', auth: true, body: payload })),
+  deleteFaq: (id) => mutate(() => apiRequest(`/faqs/${id}`, { method: 'DELETE', auth: true })),
+  getFaqCategories: () => apiRequest('/faq-categories'),
+
+  getSettings: () => apiRequest('/settings'),
+  getAdminSettings: () => apiRequest('/settings', { auth: true }),
+  updateSetting: (key, value) => mutate(() => apiRequest(`/settings/${key}`, { method: 'PUT', auth: true, body: { value } })),
+  uploadSettingImage: (key, file, payload = {}) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    Object.entries(payload).forEach(([fieldKey, fieldValue]) => {
+      if (fieldValue !== undefined && fieldValue !== null) formData.append(fieldKey, fieldValue);
     });
-    return resolveFast(faqs.sort((a, b) => a.sortOrder - b.sortOrder));
+    return mutate(() => apiRequest(`/settings/${key}/image`, { method: 'POST', auth: true, body: formData }));
   },
-  createFaq: (payload) =>
-    mutate('faqs', (items) => {
-      const created = { ...payload, id: nextId(items), status: payload.status || 'published' };
-      items.push(created);
-      return created;
-    }),
-  updateFaq: (id, payload) =>
-    mutate('faqs', (items) => {
-      const index = items.findIndex((item) => String(item.id) === String(id));
-      if (index === -1) throw new Error('ไม่พบ FAQ');
-      items[index] = { ...items[index], ...payload };
-      return items[index];
-    }),
-  deleteFaq: (id) =>
-    mutate('faqs', (items) => {
-      const index = items.findIndex((item) => String(item.id) === String(id));
-      if (index !== -1) items.splice(index, 1);
-      return null;
-    }),
-  getFaqCategories: async () => resolveFast((await readState()).faqCategories),
-  getSettings: async () => resolveFast((await readState()).settings),
-  updateSetting: (key, value) =>
-    mutate('settings', (items) => {
-      const index = items.findIndex((item) => item.key === key);
-      const nextItem = { key, value };
-      if (index === -1) items.push(nextItem);
-      else items[index] = nextItem;
-      return nextItem;
-    }),
-  getPages: async (includeDrafts = false) => {
-    const pages = (await readState()).pages;
-    return resolveFast(includeDrafts ? pages : publicItems(pages));
+
+  getPages: (includeDrafts = false) => apiRequest('/pages', { query: includeDraftsQuery(includeDrafts) }),
+  createPage: (payload) => mutate(() => apiRequest('/pages', { method: 'POST', auth: true, body: payload })),
+  updatePage: (id, payload) => mutate(() => apiRequest(`/pages/${id}`, { method: 'PUT', auth: true, body: payload })),
+  deletePage: (id) => mutate(() => apiRequest(`/pages/${id}`, { method: 'DELETE', auth: true })),
+  uploadPageImage: (id, file, payload = {}) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    Object.entries(payload).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) formData.append(key, value);
+    });
+    return mutate(() => apiRequest(`/pages/${id}/image`, { method: 'POST', auth: true, body: formData }));
   },
-  createPage: (payload) =>
-    mutate('pages', (items) => {
-      const created = { ...payload, id: nextId(items), status: payload.status || 'published' };
-      items.push(created);
-      return created;
-    }),
-  updatePage: (id, payload) =>
-    mutate('pages', (items) => {
-      const index = items.findIndex((item) => String(item.id) === String(id));
-      if (index === -1) throw new Error('ไม่พบหน้าเว็บ');
-      items[index] = { ...items[index], ...payload };
-      return items[index];
-    }),
-  deletePage: (id) =>
-    mutate('pages', (items) => {
-      const index = items.findIndex((item) => String(item.id) === String(id));
-      if (index !== -1) items.splice(index, 1);
-      return null;
-    }),
-  getRentalConditions: async () => {
-    const rentalConditions = (await readState()).rentalConditions;
-    return resolveFast(rentalConditions.sort((a, b) => a.sortOrder - b.sortOrder));
+
+  getRentalConditions: () => apiRequest('/rental-conditions'),
+  createRentalCondition: (payload) => mutate(() => apiRequest('/rental-conditions', { method: 'POST', auth: true, body: payload })),
+  updateRentalCondition: (id, payload) => mutate(() => apiRequest(`/rental-conditions/${id}`, { method: 'PUT', auth: true, body: payload })),
+  deleteRentalCondition: (id) => mutate(() => apiRequest(`/rental-conditions/${id}`, { method: 'DELETE', auth: true })),
+
+  getReviews: (includeDrafts = false) => apiRequest('/reviews', { query: includeDraftsQuery(includeDrafts) }),
+  createReview: (payload) => mutate(() => apiRequest('/reviews', { method: 'POST', auth: true, body: payload })),
+  updateReview: (id, payload) => mutate(() => apiRequest(`/reviews/${id}`, { method: 'PUT', auth: true, body: payload })),
+  uploadReviewImage: (id, file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return mutate(() => apiRequest(`/reviews/${id}/image`, { method: 'POST', auth: true, body: formData }));
   },
-  createRentalCondition: (payload) =>
-    mutate('rentalConditions', (items) => {
-      const created = { ...payload, id: nextId(items) };
-      items.push(created);
-      return created;
-    }),
-  updateRentalCondition: (id, payload) =>
-    mutate('rentalConditions', (items) => {
-      const index = items.findIndex((item) => String(item.id) === String(id));
-      if (index === -1) throw new Error('ไม่พบเงื่อนไข');
-      items[index] = { ...items[index], ...payload };
-      return items[index];
-    }),
-  deleteRentalCondition: (id) =>
-    mutate('rentalConditions', (items) => {
-      const index = items.findIndex((item) => String(item.id) === String(id));
-      if (index !== -1) items.splice(index, 1);
-      return null;
-    }),
-  getUploads: async () => resolveFast((await readState()).uploads),
-  uploadFile: (file, usageType = 'general') =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        mutate('uploads', (items) => {
-          const created = {
-            id: nextId(items),
-            originalName: file.name,
-            fileName: file.name,
-            fileUrl: reader.result,
-            mimeType: file.type,
-            sizeBytes: file.size,
-            usageType,
-            createdAt: new Date().toISOString()
-          };
-          items.unshift(created);
-          return created;
-        }).then(resolve);
-      };
-      reader.onerror = () => reject(new Error('อ่านไฟล์ไม่สำเร็จ'));
-      reader.readAsDataURL(file);
-    })
+  deleteReview: (id) => mutate(() => apiRequest(`/reviews/${id}`, { method: 'DELETE', auth: true })),
+
+  getUploads: () => apiRequest('/uploads', { auth: true }),
+  uploadFile: (file, usageType = 'general') => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('usageType', usageType);
+
+    return mutate(() => apiRequest('/uploads', {
+      method: 'POST',
+      auth: true,
+      body: formData
+    }));
+  },
+  replaceUpload: (id, file, usageType = 'general') => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('usageType', usageType);
+
+    return mutate(() => apiRequest(`/uploads/${id}`, {
+      method: 'PUT',
+      auth: true,
+      body: formData
+    }));
+  },
+  deleteUpload: (id) => mutate(() => apiRequest(`/uploads/${id}`, { method: 'DELETE', auth: true })),
+
+  getOperationsHealth: () => apiRequest('/operations/health', { auth: true }),
+  getAuditLogs: () => apiRequest('/operations/audit-logs', { auth: true }),
+  getBackups: () => apiRequest('/operations/backups', { auth: true }),
+  createBackup: () => mutate(() => apiRequest('/operations/backups', { method: 'POST', auth: true })),
+  downloadBackup: (backup) => apiDownload(`/operations/backups/${backup.id}/download`, backup.fileName),
+  getAdminProfile: () => apiRequest('/operations/profile', { auth: true }),
+  updateAdminProfile: (payload) => mutate(() => apiRequest('/operations/profile', { method: 'PUT', auth: true, body: payload })),
+  changePassword: (payload) => apiRequest('/operations/password', { method: 'POST', auth: true, body: payload }),
+  getSessions: () => apiRequest('/operations/sessions', { auth: true }),
+  revokeSession: (id) => mutate(() => apiRequest(`/operations/sessions/${id}/revoke`, { method: 'POST', auth: true }))
 };

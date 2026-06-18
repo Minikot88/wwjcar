@@ -1,3 +1,5 @@
+import FacebookIcon from '@mui/icons-material/Facebook';
+import InstagramIcon from '@mui/icons-material/Instagram';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router';
 import PageHeader from '../components/layout/PageHeader.jsx';
@@ -6,6 +8,7 @@ import Seo from '../components/seo/Seo.jsx';
 import { createBreadcrumbSchema, createLocalBusinessSchema } from '../features/seo/schemas.js';
 import { colors } from '../theme/colors.js';
 import { contactActions, externalLinkProps } from '../utils/contactActions.js';
+import { usePublicContactSettings } from '../hooks/usePublicContactSettings.js';
 
 const values = [
   'แจ้งราคาและเงื่อนไขก่อนจอง',
@@ -17,6 +20,9 @@ const values = [
 const serviceAreas = ['สนามบินหาดใหญ่', 'ตัวเมืองหาดใหญ่', 'สงขลา', 'เส้นทางไปเบตง', 'เส้นทางไปปากบารา', 'จังหวัดใกล้เคียงตามเงื่อนไข'];
 
 export default function AboutUs() {
+  const contactSettings = usePublicContactSettings();
+  const socialSameAs = [contactSettings.facebookUrl, contactSettings.instagramUrl].filter(Boolean);
+
   return (
     <>
       <Seo
@@ -28,7 +34,7 @@ export default function AboutUs() {
             { name: 'หน้าแรก', path: '/' },
             { name: 'เกี่ยวกับเรา', path: '/about-us' }
           ]),
-          createLocalBusinessSchema()
+          createLocalBusinessSchema({ sameAs: socialSameAs })
         ]}
       />
       <Stack spacing={{ xs: 5, md: 7 }}>
@@ -67,7 +73,7 @@ export default function AboutUs() {
             </Box>
             <Box sx={{ bgcolor: colors.canvas, border: `1px solid ${colors.hairlineSoft}`, borderRadius: '20px', boxShadow: '0 14px 32px rgba(15,17,21,0.05)', p: 3 }}>
               <Typography variant="caption" color="primary">
-                Customer-first
+                ลูกค้ามาก่อน
               </Typography>
               <Typography component="h2" variant="h3" sx={{ mt: 1 }}>
                 ลูกค้าต้องเข้าใจราคาและเงื่อนไขก่อนตัดสินใจ
@@ -104,6 +110,27 @@ export default function AboutUs() {
             <Button component="a" href={contactActions.line.href} {...externalLinkProps(contactActions.line)} variant="contained">
               ติดต่อผ่าน LINE
             </Button>
+          </Stack>
+        </Box>
+
+        <Box sx={{ bgcolor: colors.canvas, border: `1px solid ${colors.hairlineSoft}`, borderRadius: '24px', boxShadow: '0 18px 45px rgba(15,17,21,0.06)', p: { xs: 3, md: 4 } }}>
+          <Stack spacing={2.5}>
+            <Box>
+              <Typography component="h2" variant="h2">
+                ติดตาม WWJ Car Rent
+              </Typography>
+              <Typography color="text.secondary" sx={{ mt: 1 }}>
+                อัปเดตรถเช่า โปรโมชั่น และข้อมูลการเดินทางในหาดใหญ่ผ่านช่องทางโซเชียลอย่างเป็นทางการ
+              </Typography>
+            </Box>
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5}>
+              <Button component="a" href={contactSettings.facebookUrl} target="_blank" rel="noopener noreferrer" variant="outlined" startIcon={<FacebookIcon />}>
+                Facebook
+              </Button>
+              <Button component="a" href={contactSettings.instagramUrl} target="_blank" rel="noopener noreferrer" variant="outlined" startIcon={<InstagramIcon />}>
+                Instagram
+              </Button>
+            </Stack>
           </Stack>
         </Box>
 

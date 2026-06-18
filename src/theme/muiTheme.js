@@ -83,7 +83,18 @@ export function createMuiTheme(colorMode = 'light') {
         body: {
           backgroundColor: modePalette.background,
           color: modePalette.text,
+          overflowX: 'hidden',
           textRendering: 'optimizeLegibility'
+        },
+        html: {
+          overflowX: 'hidden'
+        },
+        '#root': {
+          minWidth: 0,
+          overflowX: 'hidden'
+        },
+        'img, video, canvas, svg': {
+          maxWidth: '100%'
         },
         '::selection': {
           backgroundColor: colors.primary,

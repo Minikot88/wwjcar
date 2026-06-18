@@ -78,6 +78,7 @@ function CarFilters({ filters, onChange }) {
           value={filters.search}
           onChange={(event) => updateFilter('search', event.target.value)}
           sx={fieldSx}
+          inputProps={{ 'aria-label': 'ค้นหารถเช่า' }}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -94,6 +95,7 @@ function CarFilters({ filters, onChange }) {
           label="ยี่ห้อรถ"
           value={filters.brand}
           onChange={(event) => updateFilter('brand', event.target.value)}
+          inputProps={{ 'aria-label': 'กรองยี่ห้อรถ' }}
         >
           <MenuItem value="">ทุกยี่ห้อ</MenuItem>
           {brands.map((brand) => (
@@ -111,6 +113,7 @@ function CarFilters({ filters, onChange }) {
           label="ระบบเกียร์"
           value={filters.transmission}
           onChange={(event) => updateFilter('transmission', event.target.value)}
+          inputProps={{ 'aria-label': 'กรองระบบเกียร์' }}
         >
           <MenuItem value="">ทุกระบบเกียร์</MenuItem>
           {transmissions.map((transmission) => (
@@ -128,6 +131,7 @@ function CarFilters({ filters, onChange }) {
           label="เรียงตาม"
           value={filters.sort}
           onChange={(event) => updateFilter('sort', event.target.value)}
+          inputProps={{ 'aria-label': 'เรียงรายการรถเช่า' }}
         >
           {sortOptions.map((option) => (
             <MenuItem key={option.value} value={option.value}>

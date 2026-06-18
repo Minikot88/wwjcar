@@ -1,65 +1,29 @@
-import { Alert, Button, Stack, TextField } from '@mui/material';
-import { useEffect, useState } from 'react';
+﻿import { Alert, Box, Button, Stack, TextField, Typography } from '@mui/material';
+import { useMemo, useState } from 'react';
 import AdminPanel from '../../components/admin/AdminPanel.jsx';
-import JsonEditor, { parseJsonInput } from '../../components/admin/JsonEditor.jsx';
+import { AdminLoadingBlock } from '../../components/admin/AdminFeedback.jsx';
+import { useAdminAction } from '../../hooks/useAdminAction.js';
 import { useCmsResource } from '../../hooks/useCmsResource.js';
 import { cmsService } from '../../services/cmsService.js';
+import { colors } from '../../theme/colors.js';
 
-const fallbackSettings = [
-  {
-    key: 'contact',
-    value: {
-      phone: '',
-      line: '',
-      whatsapp: '',
-      facebook: '',
-      email: '',
-      googleMaps: '',
-      businessHours: 'เปิดบริการทุกวัน',
-      footerText: ''
-    }
-  },
-  {
-    key: 'seoDefaults',
-    value: {
-      title: 'รถเช่าหาดใหญ่ | WWJ Car Rent',
-      description: 'รถเช่าหาดใหญ่ ราคาดี รับรถสนามบิน จองง่ายผ่าน LINE'
-    }
-  }
-];
+const defaults = { phone: '', line: '', whatsapp: '', facebook: '', instagram: '', email: '', googleMaps: '', googleBusinessProfile: '', businessHours: '', footerText: '', seoTitle: '', seoDescription: '', logo: '', heroImage: '', ogImage: '' };
+function valueOf(settings, key, fallback = '') { const item = settings.find((entry) => entry.key === key); return item?.value ?? fallback; }
+function Section({ title, description, children }) { return <Stack spacing={2} sx={{ bgcolor: 'background.paper', borderRadius: '28px', boxShadow: '0 16px 42px rgba(15,17,21,0.045)', p: { xs: 2.25, md: 3 } }}><Box><Typography sx={{ fontSize: '1.15rem', fontWeight: 950 }}>{title}</Typography>{description ? <Typography color="text.secondary" sx={{ mt: 0.5 }}>{description}</Typography> : null}</Box>{children}</Stack>; }
+function ImagePicker({ label, value, file, onFile, onUpload, disabled }) { return <Stack spacing={1.5}>{value ? <Box component="img" src={value} alt={label} sx={{ aspectRatio: '16 / 9', bgcolor: colors.canvasElevated, borderRadius: '22px', objectFit: 'cover', width: '100%' }} /> : <Box sx={{ bgcolor: colors.canvasElevated, borderRadius: '22px', p: 3 }}><Typography color="text.secondary">ยังไม่มีรูป</Typography></Box>}<Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}><Button variant="outlined" component="label">เลือกรูป<input hidden type="file" accept="image/png,image/jpeg,image/webp" onChange={(e) => onFile(e.target.files?.[0] || null)} /></Button><Button variant="contained" disabled={!file || disabled} onClick={onUpload}>อัปโหลด</Button></Stack>{file ? <Typography color="text.secondary" sx={{ fontSize: '0.82rem' }}>ไฟล์ที่เลือก: {file.name}</Typography> : null}</Stack>; }
 
 export default function AdminSiteSettings() {
-  const { data } = useCmsResource(() => cmsService.getSettings(), fallbackSettings, []);
-  const [selectedKey, setSelectedKey] = useState('contact');
-  const [json, setJson] = useState('{}');
-  const [message, setMessage] = useState('');
+  const { data, isLoading, error } = useCmsResource(() => cmsService.getAdminSettings(), [], []);
+  const action = useAdminAction();
+  const settings = Array.isArray(data) ? data : [];
+  const [form, setForm] = useState(defaults);
+  const [logoFile, setLogoFile] = useState(null);
+  const [heroFile, setHeroFile] = useState(null);
+  const [ogFile, setOgFile] = useState(null);
+  useMemo(() => { if (settings.length) setForm({ phone: valueOf(settings, 'phone'), line: valueOf(settings, 'line'), whatsapp: valueOf(settings, 'whatsapp'), facebook: valueOf(settings, 'facebook'), instagram: valueOf(settings, 'instagram'), email: valueOf(settings, 'email'), googleMaps: valueOf(settings, 'googleMaps'), googleBusinessProfile: valueOf(settings, 'googleBusinessProfile'), businessHours: valueOf(settings, 'businessHours'), footerText: valueOf(settings, 'footerText'), seoTitle: valueOf(settings, 'seoTitle'), seoDescription: valueOf(settings, 'seoDescription'), logo: valueOf(settings, 'logo'), heroImage: valueOf(settings, 'heroImage'), ogImage: valueOf(settings, 'ogImage') }); }, [settings.length]);
+  const update = (key, value) => setForm((current) => ({ ...current, [key]: value }));
+  const saveKeys = async (keys, message) => { await action.run(() => Promise.all(keys.map((key) => cmsService.updateSetting(key, form[key]))), message); };
+  const uploadImage = async (key, file, setter, message) => { const result = await action.run(() => cmsService.uploadSettingImage(key, file, { usageType: key }), message); if (result) setter(null); };
 
-  useEffect(() => {
-    const selected = data.find((item) => item.key === selectedKey) || fallbackSettings[0];
-    setJson(JSON.stringify(selected.value, null, 2));
-  }, [data, selectedKey]);
-
-  const save = async () => {
-    await cmsService.updateSetting(selectedKey, parseJsonInput(json, {}));
-    setMessage('บันทึกการตั้งค่าแล้ว');
-  };
-
-  return (
-    <AdminPanel title="ตั้งค่าเว็บไซต์" description="จัดการช่องทางติดต่อ โซเชียล เวลาทำการ แผนที่ และ SEO defaults">
-      <Stack spacing={3}>
-        {message ? <Alert severity="success">{message}</Alert> : null}
-        <TextField label="กลุ่มการตั้งค่า" select SelectProps={{ native: true }} value={selectedKey} onChange={(event) => setSelectedKey(event.target.value)}>
-          {data.map((item) => (
-            <option key={item.key} value={item.key}>
-              {item.key}
-            </option>
-          ))}
-        </TextField>
-        <JsonEditor label="ค่า JSON" value={json} onChange={setJson} />
-        <Button variant="contained" onClick={save}>
-          บันทึก
-        </Button>
-      </Stack>
-    </AdminPanel>
-  );
+  return <AdminPanel title="ตั้งค่าเว็บไซต์" description="จัดการข้อมูลติดต่อ โลโก้ โซเชียล SEO แผนที่ และเวลาทำการแบบฟอร์มธุรกิจ"><Stack spacing={3}>{error ? <Alert severity="error">{error.message}</Alert> : null}{action.error ? <Alert severity="error">{action.error}</Alert> : null}{action.success ? <Alert severity="success">{action.success}</Alert> : null}{isLoading ? <AdminLoadingBlock label="กำลังโหลดตั้งค่าเว็บไซต์..." /> : null}<Section title="ข้อมูลติดต่อ"><Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' } }}><TextField label="เบอร์โทร" value={form.phone} onChange={(e) => update('phone', e.target.value)} /><TextField label="ไลน์" value={form.line} onChange={(e) => update('line', e.target.value)} /><TextField label="WhatsApp" value={form.whatsapp} onChange={(e) => update('whatsapp', e.target.value)} /><TextField label="อีเมล" value={form.email} onChange={(e) => update('email', e.target.value)} /></Box><Button variant="contained" onClick={() => saveKeys(['phone','line','whatsapp','email'], 'บันทึกข้อมูลติดต่อแล้ว')} sx={{ alignSelf: 'flex-start' }}>บันทึกข้อมูลติดต่อ</Button></Section><Section title="โซเชียลมีเดีย"><TextField label="Facebook" value={form.facebook} onChange={(e) => update('facebook', e.target.value)} /><TextField label="Instagram" value={form.instagram} onChange={(e) => update('instagram', e.target.value)} /><Button variant="contained" onClick={() => saveKeys(['facebook','instagram'], 'บันทึกโซเชียลมีเดียแล้ว')} sx={{ alignSelf: 'flex-start' }}>บันทึกโซเชียลมีเดีย</Button></Section><Section title="โลโก้และรูปเว็บไซต์"><Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', lg: 'repeat(3, 1fr)' } }}><ImagePicker label="โลโก้" value={form.logo} file={logoFile} onFile={setLogoFile} onUpload={() => uploadImage('logo', logoFile, setLogoFile, 'อัปโหลดโลโก้แล้ว')} disabled={action.isBusy} /><ImagePicker label="รูปหน้าหลัก" value={form.heroImage} file={heroFile} onFile={setHeroFile} onUpload={() => uploadImage('heroImage', heroFile, setHeroFile, 'อัปโหลดรูปหน้าหลักแล้ว')} disabled={action.isBusy} /><ImagePicker label="รูปแชร์" value={form.ogImage} file={ogFile} onFile={setOgFile} onUpload={() => uploadImage('ogImage', ogFile, setOgFile, 'อัปโหลดรูปแชร์แล้ว')} disabled={action.isBusy} /></Box></Section><Section title="ค้นหาบน Google"><TextField label="ชื่อ SEO" value={form.seoTitle} onChange={(e) => update('seoTitle', e.target.value)} /><TextField label="คำอธิบาย SEO" value={form.seoDescription} onChange={(e) => update('seoDescription', e.target.value)} multiline minRows={3} /><Button variant="contained" onClick={() => saveKeys(['seoTitle','seoDescription'], 'บันทึกข้อมูล SEO แล้ว')} sx={{ alignSelf: 'flex-start' }}>บันทึก SEO</Button></Section><Section title="แผนที่และเวลาทำการ"><TextField label="Google Maps" value={form.googleMaps} onChange={(e) => update('googleMaps', e.target.value)} /><TextField label="Google Business Profile" value={form.googleBusinessProfile} onChange={(e) => update('googleBusinessProfile', e.target.value)} /><TextField label="เวลาทำการ" value={form.businessHours} onChange={(e) => update('businessHours', e.target.value)} multiline /><TextField label="ข้อความ Footer" value={form.footerText} onChange={(e) => update('footerText', e.target.value)} multiline minRows={3} /><Button variant="contained" onClick={() => saveKeys(['googleMaps','googleBusinessProfile','businessHours','footerText'], 'บันทึกข้อมูลเว็บไซต์แล้ว')} sx={{ alignSelf: 'flex-start' }}>บันทึกข้อมูล</Button></Section></Stack></AdminPanel>;
 }

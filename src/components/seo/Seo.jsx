@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet-async';
+import { googleConfig } from '../../config/integrations.js';
 import { siteConfig } from '../../config/site.js';
 
 export default function Seo({
@@ -14,8 +15,9 @@ export default function Seo({
   schema
 }) {
   const pageTitle = title ? `${title} | ${siteConfig.name}` : siteConfig.name;
-  const canonicalUrl = canonical ? `${siteConfig.siteUrl}${canonical}` : siteConfig.siteUrl;
-  const imageUrl = ogImage?.startsWith('http') ? ogImage : `${siteConfig.siteUrl}${ogImage}`;
+  const canonicalBase = siteConfig.canonicalUrl || siteConfig.siteUrl;
+  const canonicalUrl = canonical ? `${canonicalBase}${canonical}` : canonicalBase;
+  const imageUrl = ogImage?.startsWith('http') ? ogImage : `${canonicalBase}${ogImage}`;
   const schemas = Array.isArray(schema) ? schema : schema ? [schema] : [];
 
   return (
@@ -28,6 +30,7 @@ export default function Seo({
       <meta name="geo.placename" content="Hat Yai, Songkhla, Thailand" />
       <meta name="geo.position" content="7.0086;100.4747" />
       <meta name="ICBM" content="7.0086, 100.4747" />
+      {googleConfig.searchConsoleVerification ? <meta name="google-site-verification" content={googleConfig.searchConsoleVerification} /> : null}
       <link rel="canonical" href={canonicalUrl} />
       {preloadImage ? <link rel="preload" as="image" href={preloadImage} fetchPriority="high" /> : null}
 

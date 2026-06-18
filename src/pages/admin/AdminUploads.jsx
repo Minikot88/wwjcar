@@ -1,61 +1,44 @@
-import { Alert, Box, Button, Stack, TextField, Typography } from '@mui/material';
-import { useState } from 'react';
+﻿import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import ImageSearchOutlinedIcon from '@mui/icons-material/ImageSearchOutlined';
+import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
+import { Alert, Box, Button, Chip, InputAdornment, Stack, TextField, Typography } from '@mui/material';
+import { useMemo, useState } from 'react';
 import AdminPanel from '../../components/admin/AdminPanel.jsx';
+import { AdminEmptyState, AdminLoadingBlock } from '../../components/admin/AdminFeedback.jsx';
+import { useAdminAction } from '../../hooks/useAdminAction.js';
 import { useCmsResource } from '../../hooks/useCmsResource.js';
 import { cmsService } from '../../services/cmsService.js';
 import { colors } from '../../theme/colors.js';
 
+const labels = { general: 'ทั่วไป', about: 'เกี่ยวกับเรา', logo: 'โลโก้', hero: 'รูปหน้าหลัก', car_cover: 'รูปรถหลัก', car_gallery: 'แกลเลอรีรถ', page_hero_image: 'รูปหน้าเว็บ', page_og_image: 'รูปแชร์', seo: 'SEO', review: 'รีวิว' };
+function getUrl(item) { return item.secureUrl || item.secure_url || item.fileUrl || item.url || item.imageUrl || ''; }
+function getUsage(item) { return item.usageType || item.usage_type || 'general'; }
+function formatBytes(value) { const bytes = Number(value || 0); if (!bytes) return '-'; if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`; return `${(bytes / (1024 * 1024)).toFixed(1)} MB`; }
+function formatDate(value) { if (!value) return '-'; return new Intl.DateTimeFormat('th-TH', { dateStyle: 'medium' }).format(new Date(value)); }
+
+function AssetCard({ item, replacementId, replacementFile, action, onChooseReplacement, onReplace, onDelete }) {
+  const url = getUrl(item);
+  const usage = getUsage(item);
+  const title = item.originalName || item.original_name || item.publicId || item.public_id || `รูปภาพ #${item.id}`;
+  return <Stack spacing={1.35} sx={{ bgcolor: 'background.paper', borderRadius: '26px', boxShadow: '0 16px 42px rgba(15,17,21,0.045)', minWidth: 0, overflow: 'hidden', p: 1.25 }}><Box sx={{ bgcolor: colors.canvasElevated, borderRadius: '22px', overflow: 'hidden', position: 'relative' }}>{url ? <Box component="img" src={url} alt={title} loading="lazy" sx={{ aspectRatio: '16 / 11', display: 'block', objectFit: 'cover', width: '100%' }} /> : <Stack sx={{ alignItems: 'center', aspectRatio: '16 / 11', justifyContent: 'center' }}><ImageSearchOutlinedIcon color="disabled" /><Typography color="text.secondary" sx={{ mt: 1 }}>ไม่มีตัวอย่างรูป</Typography></Stack>}<Chip size="small" label={labels[usage] || usage} sx={{ bgcolor: 'rgba(255,255,255,0.92)', fontWeight: 900, left: 12, position: 'absolute', top: 12 }} /></Box><Stack spacing={0.45} sx={{ px: 0.75 }}><Typography sx={{ fontWeight: 950, overflowWrap: 'anywhere' }}>{title}</Typography><Typography color="text.secondary" sx={{ fontSize: '0.76rem', overflowWrap: 'anywhere' }}>{item.publicId || item.public_id ? `Cloudinary: ${item.publicId || item.public_id}` : 'ยังไม่มี public_id'}</Typography></Stack><Box sx={{ display: 'grid', gap: 1, gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', px: 0.75 }}><Meta label="รูปแบบ" value={item.format || item.mimeType || item.mime_type || 'image'} /><Meta label="ขนาด" value={formatBytes(item.bytes)} /><Meta label="ใช้งาน" value={labels[usage] || usage} /></Box><Typography color="text.secondary" sx={{ fontSize: '0.74rem', px: 0.75 }}>อัปโหลด: {formatDate(item.createdAt || item.created_at)}</Typography><Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ p: 0.75, pt: 0 }}><Button variant="outlined" component="label" size="small" sx={{ flex: 1 }}>เลือกรูปใหม่<input hidden type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => onChooseReplacement(item.id, event.target.files?.[0] || null)} /></Button><Button startIcon={<PublishedWithChangesIcon />} variant="contained" size="small" onClick={() => onReplace(item)} disabled={replacementId !== item.id || !replacementFile || action.isBusy}>แทนที่</Button><Button startIcon={<DeleteOutlineIcon />} color="error" size="small" onClick={() => onDelete(item)} disabled={action.isBusy}>ลบ</Button></Stack>{replacementId === item.id && replacementFile ? <Typography variant="caption" color="text.secondary" sx={{ px: 0.75 }}>รูปใหม่: {replacementFile.name}</Typography> : null}</Stack>;
+}
+function Meta({ label, value }) { return <Stack sx={{ bgcolor: colors.canvasElevated, borderRadius: '14px', minWidth: 0, p: 1 }}><Typography color="text.secondary" sx={{ fontSize: '0.64rem', fontWeight: 900 }}>{label}</Typography><Typography sx={{ fontSize: '0.74rem', fontWeight: 900 }} noWrap>{value}</Typography></Stack>; }
+
 export default function AdminUploads() {
-  const { data } = useCmsResource(() => cmsService.getUploads(), [], []);
+  const { data, isLoading, error } = useCmsResource(() => cmsService.getUploads(), [], []);
+  const action = useAdminAction();
   const [file, setFile] = useState(null);
   const [usageType, setUsageType] = useState('general');
-  const [message, setMessage] = useState('');
-
-  const upload = async () => {
-    if (!file) return;
-    const result = await cmsService.uploadFile(file, usageType);
-    setMessage(`อัปโหลดแล้ว: ${result.fileUrl}`);
-    setFile(null);
-  };
-
-  return (
-    <AdminPanel title="ไฟล์อัปโหลด" description="อัปโหลดรูปภาพ โลโก้ Hero รูปรถ และแกลเลอรีไปยัง /uploads">
-      <Stack spacing={3}>
-        {message ? <Alert severity="success">{message}</Alert> : null}
-        <Box
-          sx={{
-            alignItems: 'center',
-            bgcolor: colors.canvasElevated,
-            border: `1px dashed ${colors.hairline}`,
-            borderRadius: '24px',
-            display: 'grid',
-            gap: 2,
-            gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr auto' },
-            p: { xs: 2.5, md: 3 }
-          }}
-        >
-          <Button variant="outlined" component="label" sx={{ bgcolor: colors.canvas }}>
-            เลือกไฟล์
-            <input hidden type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" onChange={(event) => setFile(event.target.files?.[0] || null)} />
-          </Button>
-          <TextField label="ประเภทการใช้งาน" value={usageType} onChange={(event) => setUsageType(event.target.value)} />
-          <Button variant="contained" onClick={upload} disabled={!file}>
-            อัปโหลด
-          </Button>
-        </Box>
-        {file ? <Typography color="text.secondary">ไฟล์ที่เลือก: {file.name}</Typography> : null}
-        <Box sx={{ display: 'grid', gap: 2.5, gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' } }}>
-          {data.map((item) => (
-            <Stack key={item.id} spacing={1.4} sx={{ bgcolor: colors.canvasElevated, border: `1px solid ${colors.hairlineSoft}`, borderRadius: '22px', p: 1.5 }}>
-              <Box component="img" src={item.fileUrl} alt={item.originalName} sx={{ aspectRatio: '16 / 10', borderRadius: '18px', objectFit: 'cover', width: '100%' }} />
-              <Typography sx={{ fontWeight: 750 }}>{item.originalName}</Typography>
-              <Typography variant="caption" color="text.secondary">
-                {item.fileUrl}
-              </Typography>
-            </Stack>
-          ))}
-        </Box>
-      </Stack>
-    </AdminPanel>
-  );
+  const [replacementFile, setReplacementFile] = useState(null);
+  const [replacementId, setReplacementId] = useState(null);
+  const [category, setCategory] = useState('all');
+  const [search, setSearch] = useState('');
+  const categories = useMemo(() => ['all', ...new Set(data.map(getUsage))], [data]);
+  const filtered = useMemo(() => (category === 'all' ? data : data.filter((item) => getUsage(item) === category)).filter((item) => { const q = search.trim().toLowerCase(); if (!q) return true; return [item.originalName, item.original_name, item.publicId, item.public_id, getUsage(item)].filter(Boolean).some((value) => String(value).toLowerCase().includes(q)); }), [category, data, search]);
+  const upload = async () => { if (!file) { action.setError('กรุณาเลือกรูปภาพก่อนอัปโหลด'); return; } const result = await action.run(() => cmsService.uploadFile(file, usageType), 'อัปโหลดรูปภาพแล้ว'); if (result) setFile(null); };
+  const replaceUpload = async (item) => { if (!replacementFile || replacementId !== item.id) { action.setError('กรุณาเลือกรูปภาพใหม่ก่อนแทนที่'); return; } const result = await action.run(() => cmsService.replaceUpload(item.id, replacementFile, getUsage(item)), 'แทนที่รูปภาพแล้ว'); if (result) { setReplacementFile(null); setReplacementId(null); } };
+  const deleteUpload = async (item) => { const confirmed = window.confirm('ต้องการลบรูปนี้หรือไม่?'); if (!confirmed) return; await action.run(() => cmsService.deleteUpload(item.id), 'ลบรูปภาพแล้ว'); };
+  return <AdminPanel title="คลังรูปภาพ" description="จัดการรูปภาพแบบ Media Library พร้อมตัวอย่าง หมวดหมู่ การแทนที่ และการลบ"><Stack spacing={3}>{error ? <Alert severity="error">{error.message}</Alert> : null}{action.error ? <Alert severity="error">{action.error}</Alert> : null}{action.success ? <Alert severity="success">{action.success}</Alert> : null}{isLoading ? <AdminLoadingBlock label="กำลังโหลดคลังรูปภาพ..." /> : null}<Stack spacing={2.25} sx={{ bgcolor: 'background.paper', borderRadius: '30px', boxShadow: '0 18px 48px rgba(15,17,21,0.045)', p: { xs: 2.25, md: 3 } }}><Typography sx={{ fontSize: '1.25rem', fontWeight: 950 }}>คลังรูปภาพ Cloudinary</Typography><Stack direction={{ xs: 'column', md: 'row' }} spacing={1.25}><Button variant="outlined" component="label" startIcon={<UploadFileIcon />}>เลือกรูปภาพ<input hidden type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => setFile(event.target.files?.[0] || null)} /></Button><TextField label="หมวดรูปภาพ" select SelectProps={{ native: true }} value={usageType} onChange={(event) => setUsageType(event.target.value)} size="small" sx={{ minWidth: 190 }}>{Object.entries(labels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</TextField><Button variant="contained" onClick={upload} disabled={!file || action.isBusy}>{action.isBusy ? 'กำลังอัปโหลด...' : 'อัปโหลด'}</Button></Stack>{file ? <Typography color="text.secondary">ไฟล์ที่เลือก: {file.name}</Typography> : null}</Stack><TextField label="ค้นหารูปภาพ" value={search} onChange={(event) => setSearch(event.target.value)} InputProps={{ startAdornment: <InputAdornment position="start"><SearchOutlinedIcon /></InputAdornment> }} /><Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', rowGap: 1 }}>{categories.map((item) => <Chip key={item} label={item === 'all' ? `ทั้งหมด (${data.length})` : `${labels[item] || item} (${data.filter((upload) => getUsage(upload) === item).length})`} color={category === item ? 'primary' : 'default'} onClick={() => setCategory(item)} />)}</Stack>{!filtered.length && !isLoading ? <AdminEmptyState label="ไม่พบรูปภาพที่ตรงกับเงื่อนไข" /> : null}<Box sx={{ display: 'grid', gap: 2.5, gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, minmax(0, 1fr))', xl: 'repeat(3, minmax(0, 1fr))' } }}>{filtered.map((item) => <AssetCard key={item.id} item={item} replacementId={replacementId} replacementFile={replacementFile} action={action} onChooseReplacement={(id, nextFile) => { setReplacementId(id); setReplacementFile(nextFile); }} onReplace={replaceUpload} onDelete={deleteUpload} />)}</Box></Stack></AdminPanel>;
 }

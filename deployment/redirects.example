@@ -1,0 +1,12 @@
+# Production redirect placeholders.
+# Replace example.com with the real canonical domain before deploying.
+#
+# Netlify-style examples:
+# http://example.com/*  https://example.com/:splat  301!
+# http://www.example.com/*  https://example.com/:splat  301!
+# https://www.example.com/*  https://example.com/:splat  301!
+#
+# Cloudflare equivalent:
+# 1. Always Use HTTPS: enabled
+# 2. Redirect www.example.com/* to https://example.com/$1
+# 3. Set VITE_CANONICAL_URL=https://example.com

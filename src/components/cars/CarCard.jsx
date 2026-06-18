@@ -13,6 +13,10 @@ const formatter = new Intl.NumberFormat('th-TH');
 function CarCard({ car }) {
   const primaryBadge = car.categories?.[0] || 'รถเช่า';
   const imageAsset = getCarImageAsset(car);
+  const imageSrc = car.image || imageAsset?.src;
+  const imageProps = car.image
+    ? { alt: `${car.name} WWJ Car Rent` }
+    : responsiveImageProps(imageAsset, `${car.name} WWJ Car Rent`);
 
   return (
     <Box
@@ -23,6 +27,7 @@ function CarCard({ car }) {
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
+        minWidth: 0,
         overflow: 'hidden',
         transition: 'transform 180ms ease, box-shadow 180ms ease',
         '&:hover': {
@@ -38,8 +43,8 @@ function CarCard({ car }) {
         <Link to={`/cars/${car.slug}`} aria-label={`ดูรายละเอียด ${car.name}`}>
           <Box
             component="img"
-            src={imageAsset?.src || car.image}
-            {...responsiveImageProps(imageAsset, `${car.name} รถเช่าหาดใหญ่ WWJ Car Rent`)}
+            src={imageSrc}
+            {...imageProps}
             loading="lazy"
             sx={{
               aspectRatio: '16 / 10.5',
@@ -67,7 +72,7 @@ function CarCard({ car }) {
         />
       </Box>
 
-      <Stack spacing={2.5} sx={{ flex: 1, p: { xs: 2.75, md: 3.25 } }}>
+      <Stack spacing={2.5} sx={{ flex: 1, minWidth: 0, p: { xs: 2.5, md: 3.25 } }}>
         <Box>
           <Typography variant="caption" sx={{ color: colors.primary }}>
             {car.brand}
@@ -76,7 +81,7 @@ function CarCard({ car }) {
             component={Link}
             to={`/cars/${car.slug}`}
             variant="h3"
-            sx={{ color: colors.ink, mt: 0.75, display: 'block', textDecoration: 'none' }}
+            sx={{ color: colors.ink, mt: 0.75, display: 'block', overflowWrap: 'anywhere', textDecoration: 'none' }}
           >
             {car.name}
           </Typography>
@@ -86,7 +91,7 @@ function CarCard({ car }) {
           <Typography variant="caption" sx={{ color: colors.muted }}>
             เริ่มต้น
           </Typography>
-          <Stack direction="row" spacing={0.75} sx={{ alignItems: 'baseline' }}>
+          <Stack direction="row" spacing={0.75} sx={{ alignItems: 'baseline', flexWrap: 'wrap' }}>
             <Typography sx={{ color: colors.primary, fontSize: '1.75rem', fontWeight: 850, lineHeight: 1.1 }}>
               ฿{formatter.format(car.pricePerDay)}
             </Typography>
@@ -120,12 +125,13 @@ function Spec({ icon, label }) {
         bgcolor: colors.canvasElevated,
         borderRadius: '999px',
         color: colors.body,
+        minWidth: 0,
         px: 1.35,
         py: 0.85
       }}
     >
       {icon}
-      <Typography variant="body2">{label}</Typography>
+      <Typography variant="body2" sx={{ overflowWrap: 'anywhere' }}>{label}</Typography>
     </Stack>
   );
 }

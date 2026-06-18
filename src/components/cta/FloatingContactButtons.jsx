@@ -27,7 +27,10 @@ export default function FloatingContactButtons() {
         borderTop: { xs: `1px solid ${colors.hairline}`, md: 0 },
         bgcolor: { xs: colors.canvas, md: 'transparent' },
         p: { xs: 1, md: 0 },
-        pb: { xs: 'calc(8px + env(safe-area-inset-bottom))', md: 0 }
+        pb: { xs: 'calc(8px + env(safe-area-inset-bottom))', md: 0 },
+        '& .MuiButton-startIcon': {
+          mr: { xs: 0.5, sm: 0.75 }
+        }
       }}
     >
       {actions.map((action) => (
@@ -41,11 +44,15 @@ export default function FloatingContactButtons() {
           variant={action.primary ? 'contained' : 'outlined'}
           sx={{
             flex: { xs: 1, md: 'initial' },
+            fontSize: { xs: '0.78rem', sm: '0.86rem' },
             minHeight: 48,
+            minWidth: 0,
+            px: { xs: 0.75, sm: 1.5, md: 2 },
             borderRadius: '999px',
             borderColor: action.primary ? colors.primary : colors.hairline,
             color: action.primary ? colors.onPrimary : colors.ink,
             bgcolor: action.primary ? colors.primary : colors.canvasElevated,
+            whiteSpace: 'nowrap',
             '&:hover': {
               bgcolor: action.primary ? colors.primaryHover : colors.canvas,
               borderColor: colors.primary

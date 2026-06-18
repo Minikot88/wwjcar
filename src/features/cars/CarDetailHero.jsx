@@ -13,6 +13,10 @@ const formatter = new Intl.NumberFormat('th-TH');
 
 export default function CarDetailHero({ car }) {
   const imageAsset = getCarImageAsset(car);
+  const imageSrc = car.image || imageAsset?.src;
+  const imageProps = car.image
+    ? { alt: `${car.name} WWJ Car Rent` }
+    : responsiveImageProps(imageAsset, `${car.name} WWJ Car Rent`);
 
   return (
     <Box
@@ -33,8 +37,8 @@ export default function CarDetailHero({ car }) {
       >
         <Box
           component="img"
-          src={imageAsset?.src || car.image}
-          {...responsiveImageProps(imageAsset, `${car.name} รถเช่าหาดใหญ่ WWJ Car Rent`)}
+          src={imageSrc}
+          {...imageProps}
           fetchPriority="high"
           sx={{
             display: 'block',
@@ -87,15 +91,15 @@ export default function CarDetailHero({ car }) {
         </Box>
 
         <Stack spacing={2.25}>
-          <PrimaryButton component="a" href={contactActions.line.href} {...externalLinkProps(contactActions.line)} aria-label={`จอง ${car.name} ผ่าน LINE`}>
-            จองรถรุ่นนี้
+          <PrimaryButton component="a" href={contactActions.line.href} {...externalLinkProps(contactActions.line)} aria-label={`สอบถาม ${car.name} ผ่าน LINE`}>
+            สอบถามผ่าน LINE
           </PrimaryButton>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
             <OutlineButton component="a" href={contactActions.phone.href} aria-label={contactActions.phone.ariaLabel} sx={{ flex: 1 }} startIcon={<PhoneIcon />}>
               โทรสอบถาม
             </OutlineButton>
             <OutlineButton component="a" href={contactActions.line.href} {...externalLinkProps(contactActions.line)} aria-label={contactActions.line.ariaLabel} sx={{ flex: 1 }}>
-              ติดต่อผ่าน LINE
+              สอบถามผ่าน LINE
             </OutlineButton>
           </Stack>
         </Stack>
@@ -110,21 +114,22 @@ function Spec({ icon, label, value }) {
       direction="row"
       spacing={2}
       sx={{
-        alignItems: 'center',
+        alignItems: { xs: 'flex-start', sm: 'center' },
         justifyContent: 'space-between',
+        gap: 2,
         py: 1.75,
         '& + &': {
           borderTop: `1px solid ${colors.hairlineSoft}`
         }
       }}
     >
-      <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center' }}>
+      <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center', minWidth: 0 }}>
         <Box sx={{ color: colors.primary, display: 'inline-flex' }}>{icon}</Box>
         <Typography variant="caption" sx={{ color: colors.body }}>
           {label}
         </Typography>
       </Stack>
-      <Typography sx={{ fontWeight: 850 }}>{value}</Typography>
+      <Typography sx={{ fontWeight: 850, textAlign: 'right', overflowWrap: 'anywhere' }}>{value}</Typography>
     </Stack>
   );
 }

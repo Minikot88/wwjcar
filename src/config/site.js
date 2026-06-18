@@ -1,9 +1,10 @@
-import { APP_NAME, SITE_URL } from './env.js';
+import { APP_NAME, CANONICAL_URL, SITE_URL } from './env.js';
 
 export const siteConfig = {
   name: APP_NAME,
   description: 'รถเช่าหาดใหญ่ ราคาดี รับรถสนามบิน จองง่ายผ่าน LINE พร้อมบริการดูแลลูกค้า 24 ชั่วโมง',
   siteUrl: SITE_URL,
+  canonicalUrl: CANONICAL_URL,
   defaultOgImage: '/images/optimized/home-hero-600.webp'
 };
 
@@ -15,6 +16,10 @@ export const navigationItems = [
   {
     label: 'รถเช่า',
     href: '/cars'
+  },
+  {
+    label: 'เช็คคิวรถ',
+    href: '/availability'
   },
   {
     label: 'เช่ารายเดือน',

@@ -36,7 +36,7 @@ export function createCarsBreadcrumbSchema(car) {
 
 export function createCarProductSchema(car) {
   const imageAsset = getCarImageAsset(car);
-  const image = imageAsset?.src || car.image;
+  const image = car.image || imageAsset?.src;
   const imageUrl = image?.startsWith('http') ? image : `${siteConfig.siteUrl}${image}`;
 
   return {

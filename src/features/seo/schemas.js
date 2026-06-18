@@ -2,9 +2,11 @@ import { contactConfig } from '../../config/contact.js';
 import { siteConfig } from '../../config/site.js';
 
 const sameAs = [
+  contactConfig.facebookUrl,
+  contactConfig.instagramUrl,
   'https://www.google.com/search?q=WWJ+Car+Rent+Hat+Yai',
   'https://www.google.com/search?q=Hat+Yai+Airport+Car+Rental'
-];
+].filter(Boolean);
 
 export const localEntities = [
   { '@type': 'Place', name: 'Hat Yai', alternateName: 'หาดใหญ่' },
@@ -28,7 +30,9 @@ export function createBreadcrumbSchema(items) {
   };
 }
 
-export function createLocalBusinessSchema() {
+export function createLocalBusinessSchema(options = {}) {
+  const schemaSameAs = options.sameAs?.filter(Boolean)?.length ? options.sameAs.filter(Boolean) : sameAs;
+
   return {
     '@context': 'https://schema.org',
     '@type': ['LocalBusiness', 'AutoRental'],
@@ -40,7 +44,7 @@ export function createLocalBusinessSchema() {
     telephone: contactConfig.phone,
     email: contactConfig.email,
     priceRange: '฿฿',
-    sameAs,
+    sameAs: schemaSameAs,
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Hat Yai',
@@ -94,7 +98,9 @@ export function createLocalBusinessSchema() {
   };
 }
 
-export function createOrganizationSchema() {
+export function createOrganizationSchema(options = {}) {
+  const schemaSameAs = options.sameAs?.filter(Boolean)?.length ? options.sameAs.filter(Boolean) : sameAs;
+
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
@@ -102,7 +108,7 @@ export function createOrganizationSchema() {
     name: siteConfig.name,
     url: siteConfig.siteUrl,
     logo: `${siteConfig.siteUrl}/images/optimized/logo-320.webp`,
-    sameAs,
+    sameAs: schemaSameAs,
     contactPoint: {
       '@type': 'ContactPoint',
       telephone: contactConfig.phone,
@@ -129,6 +135,24 @@ export function createWebsiteSchema() {
       '@type': 'SearchAction',
       target: `${siteConfig.siteUrl}/cars?search={search_term_string}`,
       'query-input': 'required name=search_term_string'
+    }
+  };
+}
+
+export function createWebPageSchema({ path, name, description }) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    '@id': `${siteConfig.siteUrl}${path}#webpage`,
+    url: `${siteConfig.siteUrl}${path}`,
+    name,
+    description,
+    inLanguage: 'th-TH',
+    isPartOf: {
+      '@id': `${siteConfig.siteUrl}/#website`
+    },
+    publisher: {
+      '@id': `${siteConfig.siteUrl}/#organization`
     }
   };
 }

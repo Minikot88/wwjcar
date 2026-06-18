@@ -4,6 +4,7 @@ import { useParams } from 'react-router';
 import InternalLinkCluster from '../components/seo/InternalLinkCluster.jsx';
 import Seo from '../components/seo/Seo.jsx';
 import CarBreadcrumbs from '../features/cars/CarBreadcrumbs.jsx';
+import CarAvailabilityCalendar from '../features/cars/CarAvailabilityCalendar.jsx';
 import CarDetailHero from '../features/cars/CarDetailHero.jsx';
 import RelatedCars from '../features/cars/RelatedCars.jsx';
 import { createCarProductSchema, createCarsBreadcrumbSchema } from '../features/cars/carSchemas.js';
@@ -28,7 +29,7 @@ export default function CarDetail() {
     return <NotFound />;
   }
 
-  const description = `${car.name} รถเช่าหาดใหญ่ ราคาเริ่มต้น ฿${car.pricePerDay} ต่อวัน ${getTransmissionLabel(car.transmission)} ${car.seats} ที่นั่ง จองง่ายกับ WWJ Car Rent`;
+  const description = `${car.name} รถเช่าหาดใหญ่ ราคาเริ่มต้น ฿${car.pricePerDay} ต่อวัน ${getTransmissionLabel(car.transmission)} ${car.seats} ที่นั่ง ตรวจสอบคิวรถและวันว่างกับ WWJ Car Rent`;
 
   return (
     <>
@@ -45,11 +46,12 @@ export default function CarDetail() {
       <Stack spacing={{ xs: 5, md: 8 }}>
         <CarBreadcrumbs car={car} />
         <CarDetailHero car={car} />
+        <CarAvailabilityCalendar car={car} />
         <CarRentalDecisionSection car={car} />
         <RelatedCars car={car} />
         <InternalLinkCluster
-          title={`ข้อมูลเพิ่มเติมก่อนจอง ${car.name}`}
-          description="อ่านเงื่อนไขการเช่า คำถามที่พบบ่อย และตัวเลือกเช่ารายเดือนหรือรถเช่าสำหรับลูกค้ามาเลเซียก่อนยืนยันการจอง"
+          title={`ข้อมูลเพิ่มเติมก่อนเช่า ${car.name}`}
+          description="อ่านเงื่อนไขการเช่า คำถามที่พบบ่อย และตัวเลือกเช่ารายเดือนหรือรถเช่าสำหรับลูกค้ามาเลเซียก่อนติดต่อทีมงาน"
         />
       </Stack>
     </>
@@ -63,7 +65,7 @@ function CarRentalDecisionSection({ car }) {
     { title: 'สัมภาระ', value: `ประมาณ ${car.luggage || 2} ใบ` },
     { title: 'รับรถสนามบิน', value: 'นัดรับรถที่สนามบินหาดใหญ่ได้' },
     { title: 'เอกสารที่ใช้', value: 'บัตรประชาชนหรือพาสปอร์ต พร้อมใบขับขี่ตัวจริง' },
-    { title: 'เงินมัดจำ', value: 'แจ้งยอดชัดเจนก่อนยืนยันการจอง ตามรุ่นรถและระยะเวลาเช่า' }
+    { title: 'เงินมัดจำ', value: 'แจ้งยอดชัดเจนก่อนยืนยันการเช่า ตามรุ่นรถและระยะเวลาเช่า' }
   ];
 
   return (
@@ -90,12 +92,12 @@ function CarRentalDecisionSection({ car }) {
             ตรวจรถก่อนรับ คืนตามเวลานัด และเติมน้ำมันตามระดับเดิม
           </Typography>
           <Typography color="text.secondary" sx={{ mt: 2 }}>
-            หากต้องการขับข้ามจังหวัด ไปเบตง ปากบารา หรือเช่ารายเดือน กรุณาแจ้งเส้นทางก่อนจองเพื่อให้ทีมงานแนะนำรุ่นรถและเงื่อนไขที่เหมาะสม
+            หากต้องการขับข้ามจังหวัด ไปเบตง ปากบารา หรือเช่ารายเดือน กรุณาแจ้งเส้นทางก่อนเช่าเพื่อให้ทีมงานแนะนำรุ่นรถและเงื่อนไขที่เหมาะสม
           </Typography>
         </Box>
         <Stack spacing={1.5}>
-          <Button component="a" href={contactActions.line.href} {...externalLinkProps(contactActions.line)} variant="contained" aria-label={`จอง ${car.name} ผ่าน LINE`}>
-            จองผ่าน LINE
+          <Button component="a" href={contactActions.line.href} {...externalLinkProps(contactActions.line)} variant="contained" aria-label={`สอบถาม ${car.name} ผ่าน LINE`}>
+            สอบถามผ่าน LINE
           </Button>
           <Button component="a" href={contactActions.phone.href} variant="outlined" aria-label={contactActions.phone.ariaLabel}>
             โทรสอบถาม

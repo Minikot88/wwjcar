@@ -1,19 +1,9 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { loadCmsContent } from './cms-content-source.mjs';
 
 const root = process.cwd();
 const publicDir = resolve(root, 'public');
-const envPath = resolve(root, '.env');
-
-async function readSiteUrl() {
-  try {
-    const env = await readFile(envPath, 'utf8');
-    const match = env.match(/^VITE_SITE_URL=(.+)$/m);
-    return (match?.[1] || 'http://localhost:5180').replace(/\/$/, '');
-  } catch {
-    return 'http://localhost:5180';
-  }
-}
 
 const staticRoutes = [
   '/',
@@ -21,6 +11,7 @@ const staticRoutes = [
   '/rental-conditions',
   '/how-to-rent',
   '/contact',
+  '/availability',
   '/faq',
   '/monthly-car-rental',
   '/car-rental-for-malaysian',
@@ -31,46 +22,40 @@ const staticRoutes = [
   '/terms-and-conditions'
 ];
 
-const carSlugs = [
-  'toyota-yaris',
-  'toyota-new-yaris',
-  'toyota-vios',
-  'toyota-new-vios',
-  'toyota-altis',
-  'honda-brio',
-  'nissan-almera',
-  'nissan-march',
-  'suzuki-swift',
-  'suzuki-ciaz',
-  'mitsubishi-attrage'
-];
+function uniqueRoutes(routes) {
+  return [...new Set(routes.filter(Boolean))];
+}
 
-const blogSlugs = [
-  'hat-yai-airport-car-rental',
-  'hat-yai-driving-guide',
-  'monthly-car-rental-hat-yai',
-  'hat-yai-to-betong-car-rental',
-  'hat-yai-to-pak-bara-car-rental',
-  'malaysian-tourist-car-rental-hat-yai'
-];
+function routePriority(route) {
+  if (route === '/') return '1.0';
+  if (route.startsWith('/cars')) return '0.8';
+  if (route === '/contact' || route === '/availability') return '0.7';
+  return '0.6';
+}
 
-const siteUrl = await readSiteUrl();
+function changeFrequency(route) {
+  if (route === '/' || route === '/cars' || route === '/availability') return 'weekly';
+  return 'monthly';
+}
+
+const content = await loadCmsContent();
 const today = new Date().toISOString().slice(0, 10);
-const routes = [
+const routes = uniqueRoutes([
   ...staticRoutes,
-  ...carSlugs.map((slug) => `/cars/${slug}`),
-  ...blogSlugs.map((slug) => `/blog/${slug}`)
-];
+  ...content.cars.map((car) => car.slug && `/cars/${car.slug}`),
+  ...content.blogPosts.map((post) => post.slug && `/blog/${post.slug}`),
+  ...content.pages.map((page) => page.slug && `/${page.slug.replace(/^\//, '')}`)
+]);
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${routes
   .map(
     (route) => `  <url>
-    <loc>${siteUrl}${route}</loc>
+    <loc>${content.siteUrl}${route === '/' ? '' : route}</loc>
     <lastmod>${today}</lastmod>
-    <changefreq>${route === '/' ? 'weekly' : 'monthly'}</changefreq>
-    <priority>${route === '/' ? '1.0' : route.startsWith('/cars') ? '0.8' : '0.6'}</priority>
+    <changefreq>${changeFrequency(route)}</changefreq>
+    <priority>${routePriority(route)}</priority>
   </url>`
   )
   .join('\n')}
@@ -80,9 +65,11 @@ ${routes
 const robots = `User-agent: *
 Allow: /
 
-Sitemap: ${siteUrl}/sitemap.xml
+Sitemap: ${content.siteUrl}/sitemap.xml
 `;
 
 await mkdir(publicDir, { recursive: true });
 await writeFile(resolve(publicDir, 'sitemap.xml'), sitemap);
 await writeFile(resolve(publicDir, 'robots.txt'), robots);
+
+console.log(`Generated sitemap from ${content.source} content with ${routes.length} routes.`);

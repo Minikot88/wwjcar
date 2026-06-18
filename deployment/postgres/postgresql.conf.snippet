@@ -1,0 +1,8 @@
+# Add or verify in postgresql.conf only if DBeaver must connect remotely.
+# Keep PostgreSQL bound to localhost when using SSH tunnel.
+#
+# Safer option with SSH tunnel:
+# listen_addresses = 'localhost'
+#
+# Direct DBeaver access from trusted IP only:
+listen_addresses = 'localhost,168.110.198.88'

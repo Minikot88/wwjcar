@@ -10,8 +10,20 @@
   "theme_color": "#FF0000",
   "icons": [
     {
-      "src": "/photo/wwj-carrent.webp",
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
       "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/optimized/logo-320.webp",
+      "sizes": "320x320",
       "type": "image/webp",
       "purpose": "any"
     }

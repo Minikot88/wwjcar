@@ -1,172 +1,38 @@
-import { Alert, Box, Button, Checkbox, FormControlLabel, Stack, TextField, Typography } from '@mui/material';
-import { useEffect, useMemo, useState } from 'react';
+﻿import { Alert, Box, Button, Checkbox, Drawer, FormControlLabel, IconButton, Stack, TextField, Typography } from '@mui/material';
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import { useMemo, useState } from 'react';
 import AdminPanel from '../../components/admin/AdminPanel.jsx';
+import { AdminEmptyState, AdminLoadingBlock } from '../../components/admin/AdminFeedback.jsx';
 import { cars as fallbackCars } from '../../data/cars.js';
+import { useAdminAction } from '../../hooks/useAdminAction.js';
 import { useCmsResource } from '../../hooks/useCmsResource.js';
 import { cmsService } from '../../services/cmsService.js';
 import { colors } from '../../theme/colors.js';
 
-const emptyCar = {
-  name: '',
-  slug: '',
-  brand: '',
-  image: '',
-  pricePerDay: 0,
-  transmission: 'Automatic',
-  seats: 5,
-  fuel: 'Petrol',
-  description: '',
-  categories: '',
-  suitableFor: '',
-  luggage: 2,
-  featured: false,
-  airportPickup: true,
-  monthlyRental: false,
-  status: 'published'
-};
+const emptyCar = { name: '', slug: '', brand: '', image: '', pricePerDay: 0, transmission: 'Automatic', seats: 5, fuel: 'Petrol', description: '', categories: '', suitableFor: '', luggage: 2, featured: false, airportPickup: true, monthlyRental: false, status: 'published' };
+function toForm(car) { return { ...emptyCar, ...car, image: car.coverImage || car.image || '', categories: (car.categories || []).join(', '), suitableFor: (car.suitableFor || []).join(', ') }; }
+function list(value) { return String(value || '').split(',').map((item) => item.trim()).filter(Boolean); }
+function toPayload(form) { return { ...form, coverImage: form.image, pricePerDay: Number(form.pricePerDay), seats: Number(form.seats), luggage: Number(form.luggage), categories: list(form.categories), suitableFor: list(form.suitableFor) }; }
 
-function toForm(car) {
-  return {
-    ...emptyCar,
-    ...car,
-    image: car.coverImage || car.image || '',
-    categories: (car.categories || []).join(', '),
-    suitableFor: (car.suitableFor || []).join(', ')
-  };
+function VehicleCard({ car, onEdit }) {
+  const image = car.coverImage || car.image || '/images/optimized/wwj-carrent-600.webp';
+  return <Stack spacing={1.5} sx={{ bgcolor: 'background.paper', borderRadius: '28px', boxShadow: '0 18px 48px rgba(15,17,21,0.055)', overflow: 'hidden', p: 1.5 }}><Box component="img" src={image} alt={`${car.name} รถเช่า`} loading="lazy" sx={{ aspectRatio: '16 / 10', bgcolor: colors.canvasElevated, borderRadius: '22px', objectFit: 'cover', width: '100%' }} /><Stack spacing={1.2} sx={{ px: 1, pb: 1 }}><Box><Typography sx={{ fontSize: '1.08rem', fontWeight: 950 }} noWrap>{car.name}</Typography><Typography color="text.secondary" sx={{ fontSize: '0.86rem' }} noWrap>{car.brand} · {car.transmission} · {car.seats} ที่นั่ง</Typography></Box><Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between' }}><Box><Typography color="text.secondary" sx={{ fontSize: '0.76rem', fontWeight: 800 }}>ราคา/วัน</Typography><Typography color="primary" sx={{ fontSize: '1.35rem', fontWeight: 950 }}>฿{Number(car.pricePerDay || 0).toLocaleString('th-TH')}</Typography></Box><Button variant="contained" onClick={onEdit}>แก้ไข</Button></Stack></Stack></Stack>;
 }
 
-function toPayload(form) {
-  return {
-    ...form,
-    coverImage: form.image,
-    pricePerDay: Number(form.pricePerDay),
-    seats: Number(form.seats),
-    luggage: Number(form.luggage),
-    categories: form.categories.split(',').map((item) => item.trim()).filter(Boolean),
-    suitableFor: form.suitableFor.split(',').map((item) => item.trim()).filter(Boolean)
-  };
+function EditDrawer({ open, form, selectedId, action, onClose, onUpdate, onSave, onDelete }) {
+  return <Drawer anchor="right" open={open} onClose={onClose} PaperProps={{ sx: { width: { xs: '100vw', sm: 620 }, maxWidth: '100vw' } }}><Stack sx={{ minHeight: '100%' }}><Stack direction="row" spacing={2} sx={{ alignItems: 'flex-start', borderBottom: `1px solid ${colors.hairlineSoft}`, p: { xs: 2, md: 3 } }}><Box sx={{ flex: 1 }}><Typography sx={{ fontSize: '1.45rem', fontWeight: 950 }}>{selectedId ? 'แก้ไขข้อมูลรถ' : 'เพิ่มรถใหม่'}</Typography><Typography color="text.secondary" sx={{ mt: 0.75 }}>แก้ไขข้อมูลที่ลูกค้าเห็นบนหน้าเว็บไซต์และข้อมูลที่ใช้บริหารฟลีทรถ</Typography></Box><IconButton aria-label="ปิด" onClick={onClose}><CloseOutlinedIcon /></IconButton></Stack><Stack spacing={2.25} sx={{ p: { xs: 2, md: 3 } }}><TextField label="ชื่อรถ" value={form.name} onChange={(e) => onUpdate('name', e.target.value)} required /><Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' } }}><TextField label="Slug" value={form.slug} onChange={(e) => onUpdate('slug', e.target.value)} /><TextField label="ยี่ห้อ" value={form.brand} onChange={(e) => onUpdate('brand', e.target.value)} /></Box><TextField label="ลิงก์รูปหลัก" value={form.image} onChange={(e) => onUpdate('image', e.target.value)} />{form.image ? <Box component="img" src={form.image} alt={form.name || 'รูปรถ'} sx={{ aspectRatio: '16 / 9', borderRadius: '22px', objectFit: 'cover', width: '100%' }} /> : null}<Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' } }}><TextField label="ราคา/วัน" type="number" value={form.pricePerDay} onChange={(e) => onUpdate('pricePerDay', e.target.value)} /><TextField label="ที่นั่ง" type="number" value={form.seats} onChange={(e) => onUpdate('seats', e.target.value)} /><TextField label="กระเป๋า" type="number" value={form.luggage} onChange={(e) => onUpdate('luggage', e.target.value)} /></Box><Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' } }}><TextField label="เกียร์" value={form.transmission} onChange={(e) => onUpdate('transmission', e.target.value)} /><TextField label="เชื้อเพลิง" value={form.fuel} onChange={(e) => onUpdate('fuel', e.target.value)} /></Box><TextField label="รายละเอียดรถ" value={form.description} onChange={(e) => onUpdate('description', e.target.value)} multiline minRows={4} /><TextField label="หมวดหมู่ คั่นด้วย comma" value={form.categories} onChange={(e) => onUpdate('categories', e.target.value)} /><TextField label="เหมาะสำหรับ คั่นด้วย comma" value={form.suitableFor} onChange={(e) => onUpdate('suitableFor', e.target.value)} /><Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}><FormControlLabel control={<Checkbox checked={form.featured} onChange={(e) => onUpdate('featured', e.target.checked)} />} label="รถแนะนำ" /><FormControlLabel control={<Checkbox checked={form.airportPickup} onChange={(e) => onUpdate('airportPickup', e.target.checked)} />} label="รับรถสนามบิน" /><FormControlLabel control={<Checkbox checked={form.monthlyRental} onChange={(e) => onUpdate('monthlyRental', e.target.checked)} />} label="เช่ารายเดือน" /></Stack><Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.25}><Button variant="contained" onClick={onSave} disabled={action.isBusy}>{action.isBusy ? 'กำลังบันทึก...' : 'บันทึกข้อมูลรถ'}</Button>{selectedId ? <Button variant="outlined" color="error" onClick={onDelete} disabled={action.isBusy}>ลบรถ</Button> : null}</Stack></Stack></Stack></Drawer>;
 }
 
 export default function AdminCars() {
-  const { data, error } = useCmsResource(() => cmsService.getCars(true), fallbackCars, []);
+  const { data, isLoading, error } = useCmsResource(() => cmsService.getCars(true), fallbackCars, []);
+  const action = useAdminAction();
   const [selectedId, setSelectedId] = useState(null);
   const [form, setForm] = useState(emptyCar);
-  const [message, setMessage] = useState('');
-
+  const [open, setOpen] = useState(false);
   const selectedCar = useMemo(() => data.find((car) => car.id === selectedId), [data, selectedId]);
-
-  useEffect(() => {
-    if (selectedCar) setForm(toForm(selectedCar));
-  }, [selectedCar]);
-
-  const startCreate = () => {
-    setSelectedId(null);
-    setForm(emptyCar);
-    setMessage('');
-  };
-
-  const save = async () => {
-    const payload = toPayload(form);
-    if (selectedId) {
-      await cmsService.updateCar(selectedId, payload);
-      setMessage('บันทึกข้อมูลรถแล้ว');
-    } else {
-      const created = await cmsService.createCar(payload);
-      setSelectedId(created.id);
-      setMessage('สร้างรถใหม่แล้ว');
-    }
-  };
-
-  const remove = async () => {
-    if (!selectedId) return;
-    await cmsService.deleteCar(selectedId);
-    startCreate();
-    setMessage('ลบรถแล้ว');
-  };
-
+  const openEditor = (car) => { setSelectedId(car?.id || null); setForm(car ? toForm(car) : emptyCar); setOpen(true); action.clearFeedback(); };
   const update = (key, value) => setForm((current) => ({ ...current, [key]: value }));
-
-  return (
-    <AdminPanel title="รถเช่า" description="สร้าง แก้ไข ลบ และตั้งค่าข้อมูลรถที่แสดงบนหน้าเว็บไซต์" actionLabel="เพิ่มรถใหม่" onAction={startCreate}>
-      <Stack spacing={3}>
-        {error ? <Alert severity="warning">เชื่อมต่อ API ไม่สำเร็จ กำลังแสดงข้อมูลสำรอง</Alert> : null}
-        {message ? <Alert severity="success">{message}</Alert> : null}
-        <Box sx={{ display: 'grid', gap: 3.5, gridTemplateColumns: { xs: '1fr', lg: '0.78fr 1.22fr' } }}>
-          <Stack spacing={1}>
-            {data.map((car) => (
-              <Button
-                key={car.id}
-                onClick={() => setSelectedId(car.id)}
-                sx={{
-                  bgcolor: selectedId === car.id ? 'rgba(255,0,0,0.06)' : 'transparent',
-                  border: `1px solid ${selectedId === car.id ? 'rgba(255,0,0,0.16)' : 'transparent'}`,
-                  borderRadius: '16px',
-                  color: selectedId === car.id ? colors.primary : 'text.primary',
-                  justifyContent: 'space-between',
-                  minHeight: 56,
-                  px: 2,
-                  textAlign: 'left',
-                  '&:hover': {
-                    bgcolor: colors.canvasElevated
-                  }
-                }}
-              >
-                <span>{car.name}</span>
-                <Typography component="span" variant="caption">
-                  ฿{Number(car.pricePerDay).toLocaleString('th-TH')}
-                </Typography>
-              </Button>
-            ))}
-          </Stack>
-
-          <Stack spacing={3}>
-            <Stack spacing={2.25}>
-              <Typography variant="caption" color="primary">ข้อมูลหลัก</Typography>
-              <TextField label="ชื่อรถ" value={form.name} onChange={(event) => update('name', event.target.value)} required />
-              <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' } }}>
-                <TextField label="Slug" value={form.slug} onChange={(event) => update('slug', event.target.value)} required />
-                <TextField label="แบรนด์" value={form.brand} onChange={(event) => update('brand', event.target.value)} required />
-              </Box>
-              <TextField label="Cover Image URL" value={form.image} onChange={(event) => update('image', event.target.value)} />
-            </Stack>
-
-            <Stack spacing={2.25}>
-              <Typography variant="caption" color="primary">ราคาและสเปกรถ</Typography>
-              <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' } }}>
-                <TextField label="ราคา/วัน" type="number" value={form.pricePerDay} onChange={(event) => update('pricePerDay', event.target.value)} />
-                <TextField label="ที่นั่ง" type="number" value={form.seats} onChange={(event) => update('seats', event.target.value)} />
-                <TextField label="กระเป๋า" type="number" value={form.luggage} onChange={(event) => update('luggage', event.target.value)} />
-              </Box>
-              <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' } }}>
-                <TextField label="เกียร์" value={form.transmission} onChange={(event) => update('transmission', event.target.value)} />
-                <TextField label="เชื้อเพลิง" value={form.fuel} onChange={(event) => update('fuel', event.target.value)} />
-              </Box>
-            </Stack>
-
-            <Stack spacing={2.25}>
-              <Typography variant="caption" color="primary">เนื้อหาและสถานะ</Typography>
-              <TextField label="คำอธิบาย" value={form.description} onChange={(event) => update('description', event.target.value)} multiline minRows={3} />
-              <TextField label="หมวดหมู่ (คั่นด้วย comma)" value={form.categories} onChange={(event) => update('categories', event.target.value)} />
-              <TextField label="เหมาะสำหรับ (คั่นด้วย comma)" value={form.suitableFor} onChange={(event) => update('suitableFor', event.target.value)} />
-              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
-                <FormControlLabel control={<Checkbox checked={form.featured} onChange={(event) => update('featured', event.target.checked)} />} label="แนะนำ" />
-                <FormControlLabel control={<Checkbox checked={form.airportPickup} onChange={(event) => update('airportPickup', event.target.checked)} />} label="รับรถสนามบิน" />
-                <FormControlLabel control={<Checkbox checked={form.monthlyRental} onChange={(event) => update('monthlyRental', event.target.checked)} />} label="เช่ารายเดือน" />
-              </Stack>
-            </Stack>
-            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-              <Button variant="contained" onClick={save}>
-                บันทึก
-              </Button>
-              {selectedId ? (
-                <Button variant="outlined" color="error" onClick={remove}>
-                  ลบ
-                </Button>
-              ) : null}
-            </Stack>
-          </Stack>
-        </Box>
-      </Stack>
-    </AdminPanel>
-  );
+  const save = async () => { const payload = toPayload(form); if (selectedId) await action.run(() => cmsService.updateCar(selectedId, payload), 'บันทึกข้อมูลรถแล้ว'); else { const created = await action.run(() => cmsService.createCar(payload), 'เพิ่มรถใหม่แล้ว'); if (created?.id) setSelectedId(created.id); } };
+  const remove = async () => { if (!selectedId) return; const result = await action.run(() => cmsService.deleteCar(selectedId), 'ลบรถแล้ว'); if (result) setOpen(false); };
+  return <AdminPanel title="จัดการรถเช่า" description="จัดการรถแบบการ์ด เห็นรูป ราคา และแก้ไขได้รวดเร็ว" actionLabel="เพิ่มรถใหม่" onAction={() => openEditor(null)}><Stack spacing={3}>{error ? <Alert severity="warning">โหลดข้อมูลจาก API ไม่สำเร็จ กำลังแสดงข้อมูลสำรอง</Alert> : null}{action.error ? <Alert severity="error">{action.error}</Alert> : null}{action.success ? <Alert severity="success">{action.success}</Alert> : null}{isLoading ? <AdminLoadingBlock label="กำลังโหลดข้อมูลรถ..." /> : null}{!data.length && !isLoading ? <AdminEmptyState label="ยังไม่มีรถในระบบ" /> : null}<Box sx={{ display: 'grid', gap: 2.5, gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, minmax(0, 1fr))', xl: 'repeat(3, minmax(0, 1fr))' } }}>{data.map((car) => <VehicleCard key={car.id || car.slug} car={car} onEdit={() => openEditor(car)} />)}</Box></Stack><EditDrawer open={open} form={form} selectedId={selectedId} selectedCar={selectedCar} action={action} onClose={() => setOpen(false)} onUpdate={update} onSave={save} onDelete={remove} /></AdminPanel>;
 }

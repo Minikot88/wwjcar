@@ -1,0 +1,7 @@
+[Unit]
+Description=WWJ Car Rent PostgreSQL backup
+
+[Service]
+Type=oneshot
+EnvironmentFile=/home/ubuntu/infra/projects/wwjcar/backend/.env
+ExecStart=/home/ubuntu/infra/projects/wwjcar/source/deployment/ubuntu/backup-wwjcar.sh

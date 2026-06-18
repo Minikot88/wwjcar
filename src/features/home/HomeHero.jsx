@@ -5,10 +5,19 @@ import { OutlineButton, PrimaryButton } from '../../components/ui/buttons/index.
 import { colors } from '../../theme/colors.js';
 import { contactActions, externalLinkProps } from '../../utils/contactActions.js';
 import { getImageAsset, responsiveImageProps } from '../../utils/imageAssets.js';
+import { useCmsResource } from '../../hooks/useCmsResource.js';
+import { cmsService } from '../../services/cmsService.js';
 
 const heroImage = getImageAsset('home-hero');
 
 export default function HomeHero() {
+  const { data: settings } = useCmsResource(() => cmsService.getSettings(), [], []);
+  const home = settings.find((item) => item.key === 'home')?.value || {};
+  const heroSrc = home.heroImage || heroImage.src;
+  const heroProps = home.heroImage
+    ? { alt: 'WWJ Car Rent Hat Yai hero' }
+    : responsiveImageProps(heroImage, 'WWJ Car Rent Hat Yai hero');
+
   return (
     <Box
       component="section"
@@ -61,8 +70,8 @@ export default function HomeHero() {
           <Box sx={{ position: 'relative', gridArea: 'media' }}>
             <Box
               component="img"
-              src={heroImage.src}
-              {...responsiveImageProps(heroImage, 'รถเช่าหาดใหญ่ WWJ Car Rent รับรถสนามบินหาดใหญ่')}
+              src={heroSrc}
+              {...heroProps}
               fetchPriority="high"
               sx={{
                 display: 'block',

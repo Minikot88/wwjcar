@@ -1,8 +1,9 @@
 import { Alert, Box, Button, Stack, TextField, Typography } from '@mui/material';
-import { useState } from 'react';
-import { Navigate, useLocation, useNavigate } from 'react-router';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router';
 import { LogoFull } from '../../components/brand/Logo.jsx';
-import { getAdminToken } from '../../services/apiClient.js';
+import PageLoader from '../../components/loading/PageLoader.jsx';
+import { clearAdminToken, getAdminToken } from '../../services/apiClient.js';
 import { cmsService } from '../../services/cmsService.js';
 import { colors } from '../../theme/colors.js';
 
@@ -11,11 +12,30 @@ export default function AdminLogin() {
   const location = useLocation();
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
+  const [isCheckingSession, setIsCheckingSession] = useState(() => Boolean(getAdminToken()));
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  if (getAdminToken()) {
-    return <Navigate to="/admin" replace />;
-  }
+  useEffect(() => {
+    let isMounted = true;
+
+    if (!getAdminToken()) {
+      setIsCheckingSession(false);
+      return undefined;
+    }
+
+    cmsService.getCurrentAdmin()
+      .then(() => {
+        if (isMounted) navigate('/admin', { replace: true });
+      })
+      .catch(() => {
+        clearAdminToken();
+        if (isMounted) setIsCheckingSession(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [navigate]);
 
   const submit = async (event) => {
     event.preventDefault();
@@ -26,11 +46,15 @@ export default function AdminLogin() {
       await cmsService.login(form);
       navigate(location.state?.from || '/admin', { replace: true });
     } catch (loginError) {
-      setError(loginError.message);
+      setError(loginError.message || 'เข้าสู่ระบบไม่สำเร็จ');
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  if (isCheckingSession) {
+    return <PageLoader />;
+  }
 
   return (
     <Box sx={{ alignItems: 'center', bgcolor: 'background.default', display: 'flex', minHeight: '100vh', px: 2 }}>
@@ -54,12 +78,12 @@ export default function AdminLogin() {
             เข้าสู่ระบบผู้ดูแล
           </Typography>
           <Typography color="text.secondary" sx={{ mt: 1 }}>
-            จัดการรถเช่า FAQ หน้าเว็บ และข้อมูลเว็บไซต์
+            จัดการรถเช่า การจอง ลูกค้า รูปภาพ และเนื้อหาเว็บไซต์ WWJ Car Rent
           </Typography>
         </Box>
         {error ? <Alert severity="error">{error}</Alert> : null}
-        <TextField label="อีเมล" type="email" value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} required />
-        <TextField label="รหัสผ่าน" type="password" value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} required />
+        <TextField label="อีเมล" type="email" value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} required autoComplete="username" />
+        <TextField label="รหัสผ่าน" type="password" value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} required autoComplete="current-password" />
         <Button type="submit" variant="contained" disabled={isSubmitting}>
           {isSubmitting ? 'กำลังเข้าสู่ระบบ...' : 'เข้าสู่ระบบ'}
         </Button>

@@ -1,5 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import { NavLink } from 'react-router';
+import { cmsService } from '../../services/cmsService.js';
+import { useCmsResource } from '../../hooks/useCmsResource.js';
 import { colors } from '../../theme/colors.js';
 import { getImageAsset, responsiveImageProps } from '../../utils/imageAssets.js';
 
@@ -24,6 +26,13 @@ function LogoRoot({ to, label = 'WWJ Car Rent', children, sx }) {
 }
 
 export function LogoMark({ to = '/', size = { xs: 34, md: 40 }, priority = false, sx }) {
+  const { data: settings } = useCmsResource(() => cmsService.getSettings(), [], []);
+  const brand = settings.find((item) => item.key === 'brand')?.value || {};
+  const logoSrc = brand.logoUrl || logoImage.src;
+  const logoProps = brand.logoUrl
+    ? { alt: 'WWJ Car Rent Hat Yai logo' }
+    : responsiveImageProps(logoImage, 'WWJ Car Rent Hat Yai logo');
+
   return (
     <LogoRoot to={to} sx={sx}>
       <Box
@@ -41,8 +50,8 @@ export function LogoMark({ to = '/', size = { xs: 34, md: 40 }, priority = false
       >
         <Box
           component="img"
-          src={logoImage.src}
-          {...responsiveImageProps(logoImage, 'WWJ Car Rent Hat Yai logo')}
+          src={logoSrc}
+          {...logoProps}
           loading={priority ? 'eager' : 'lazy'}
           sx={{
             display: 'block',
@@ -56,7 +65,7 @@ export function LogoMark({ to = '/', size = { xs: 34, md: 40 }, priority = false
   );
 }
 
-export function LogoFull({ to = '/', markSize = { xs: 34, md: 40 }, priority = false, sx, textSx }) {
+export function LogoFull({ to = '/', markSize = { xs: 34, md: 40 }, priority = false, sx, textSx, subtitleSx }) {
   return (
     <LogoRoot to={to} sx={{ gap: 1.35, ...sx }}>
       <LogoMark to={null} size={markSize} priority={priority} />
@@ -82,7 +91,8 @@ export function LogoFull({ to = '/', markSize = { xs: 34, md: 40 }, priority = f
             fontSize: '0.72rem',
             fontWeight: 700,
             lineHeight: 1.2,
-            mt: 0.35
+            mt: 0.35,
+            ...subtitleSx
           }}
         >
           Hat Yai
