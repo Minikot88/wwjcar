@@ -115,9 +115,12 @@ export const cmsService = {
     return mutate(() => apiRequest(`/settings/${key}/image`, { method: 'POST', auth: true, body: formData }));
   },
 
-  getPages: (includeDrafts = false) => apiRequest('/pages', { query: includeDraftsQuery(includeDrafts) }),
+  getPages: (includeDrafts = false) => apiRequest('/pages', { auth: includeDrafts, query: includeDraftsQuery(includeDrafts) }),
+  getPage: (slug, includeDrafts = false) => apiRequest(`/pages/${slug}`, { auth: includeDrafts, query: includeDraftsQuery(includeDrafts) }),
   createPage: (payload) => mutate(() => apiRequest('/pages', { method: 'POST', auth: true, body: payload })),
   updatePage: (id, payload) => mutate(() => apiRequest(`/pages/${id}`, { method: 'PUT', auth: true, body: payload })),
+  updatePageStatus: (id, status) => mutate(() => apiRequest(`/pages/${id}/status`, { method: 'PATCH', auth: true, body: { status } })),
+  duplicatePage: (id) => mutate(() => apiRequest(`/pages/${id}/duplicate`, { method: 'POST', auth: true })),
   deletePage: (id) => mutate(() => apiRequest(`/pages/${id}`, { method: 'DELETE', auth: true })),
   uploadPageImage: (id, file, payload = {}) => {
     const formData = new FormData();

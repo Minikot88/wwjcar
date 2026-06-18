@@ -278,16 +278,38 @@ export const cmsController = {
     response.status(201).json({ upload, setting });
   },
 
-  listPages: async (request, response) => response.json(await pagesRepository.list(boolParam(request.query.includeDrafts))),
+  listPages: async (request, response) => {
+    const includeDrafts = request.user?.role === 'admin' && boolParam(request.query.includeDrafts);
+    response.json(await pagesRepository.list(includeDrafts));
+  },
+  getPage: async (request, response) => {
+    const includeDrafts = request.user?.role === 'admin' && boolParam(request.query.includeDrafts);
+    const page = await pagesRepository.findBySlug(request.params.slug, includeDrafts);
+    if (!page) throw new HttpError(404, 'Page not found');
+    response.json(page);
+  },
   createPage: async (request, response) => {
-    const page = await pagesRepository.create(request.body);
+    const page = await pagesRepository.create({ ...request.body, updatedBy: request.user?.id });
     await auditRepository.create({ user: request.user, action: 'create', entityType: 'page', entityId: page.id, metadata: { slug: page.slug }, request });
     response.status(201).json(page);
   },
   updatePage: async (request, response) => {
-    const page = await pagesRepository.update(request.params.id, request.body);
+    const page = await pagesRepository.update(request.params.id, { ...request.body, updatedBy: request.user?.id });
+    if (!page) throw new HttpError(404, 'Page not found');
     await auditRepository.create({ user: request.user, action: 'update', entityType: 'page', entityId: request.params.id, metadata: { slug: page?.slug }, request });
     response.json(page);
+  },
+  updatePageStatus: async (request, response) => {
+    const page = await pagesRepository.updateStatus(request.params.id, request.body.status, request.user?.id);
+    if (!page) throw new HttpError(404, 'Page not found');
+    await auditRepository.create({ user: request.user, action: request.body.status, entityType: 'page', entityId: request.params.id, metadata: { slug: page.slug, status: page.status }, request });
+    response.json(page);
+  },
+  duplicatePage: async (request, response) => {
+    const page = await pagesRepository.duplicate(request.params.id, request.user?.id);
+    if (!page) throw new HttpError(404, 'Page not found');
+    await auditRepository.create({ user: request.user, action: 'duplicate', entityType: 'page', entityId: page.id, metadata: { slug: page.slug, sourceId: request.params.id }, request });
+    response.status(201).json(page);
   },
   deletePage: async (request, response) => {
     await pagesRepository.delete(request.params.id);
@@ -300,7 +322,8 @@ export const cmsController = {
     const page = await pagesRepository.updateImage(request.params.id, {
       field: request.body.field || 'ogImage',
       fieldPath: request.body.fieldPath,
-      imageUrl: upload.secureUrl || upload.fileUrl
+      imageUrl: upload.secureUrl || upload.fileUrl,
+      updatedBy: request.user?.id
     });
     if (!page) throw new HttpError(404, 'Page not found');
     await auditRepository.create({ user: request.user, action: 'upload_image', entityType: 'page', entityId: request.params.id, metadata: { uploadId: upload.id }, request });

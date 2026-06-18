@@ -5,6 +5,7 @@ import { createBreadcrumbSchema, createWebPageSchema } from '../features/seo/sch
 import { useCmsResource } from '../hooks/useCmsResource.js';
 import { usePublicContactSettings } from '../hooks/usePublicContactSettings.js';
 import { cmsService } from '../services/cmsService.js';
+import NotFound from './NotFound.jsx';
 
 const privacyContentFallback = {
   title: 'นโยบายความเป็นส่วนตัว',
@@ -70,8 +71,7 @@ function normalizeSections(content) {
   return privacyContentFallback.sections;
 }
 
-function normalizePage(pages) {
-  const cmsPage = Array.isArray(pages) ? pages.find((item) => item.slug === 'privacy-policy') : null;
+function normalizePage(cmsPage) {
   const content = cmsPage?.content || {};
 
   return {
@@ -96,9 +96,10 @@ function normalizePage(pages) {
 }
 
 export default function PrivacyPolicy() {
-  const { data: pages } = useCmsResource(() => cmsService.getPages(), [], []);
+  const { data: cmsPage, isLoading, error } = useCmsResource(() => cmsService.getPage('privacy-policy'), null, []);
   const contact = usePublicContactSettings();
-  const page = normalizePage(pages);
+  if (error && !isLoading) return <NotFound />;
+  const page = normalizePage(cmsPage);
 
   const schemas = [
     createBreadcrumbSchema([

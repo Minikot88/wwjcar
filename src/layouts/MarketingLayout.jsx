@@ -4,6 +4,7 @@ import { Outlet } from 'react-router';
 import Header from '../components/navigation/Header.jsx';
 import Footer from '../components/footer/Footer.jsx';
 import AppContainer from '../components/layout/AppContainer.jsx';
+import PageVisibilityGate from '../components/cms/PageVisibilityGate.jsx';
 import { colors } from '../theme/colors.js';
 
 const FloatingContactButtons = lazy(() => import('../components/cta/FloatingContactButtons.jsx'));
@@ -14,7 +15,9 @@ export default function MarketingLayout() {
       <Header />
       <Box component="main" sx={{ flex: 1 }}>
         <AppContainer size="editorial" sx={{ py: { xs: 6, md: 10 } }}>
-          <Outlet />
+          <PageVisibilityGate>
+            <Outlet />
+          </PageVisibilityGate>
         </AppContainer>
       </Box>
       <Footer />

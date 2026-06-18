@@ -22,6 +22,19 @@ const ogImage = absoluteUrl(seoDefaults.ogImage || homeSettings.heroImage || '/i
 const defaultDescription = seoDefaults.description || 'รถเช่าหาดใหญ่ ราคาดี รับรถสนามบินหาดใหญ่ จองง่ายผ่าน LINE บริการทุกวัน เหมาะสำหรับลูกค้ารายวัน รายเดือน และนักท่องเที่ยวมาเลเซีย';
 
 const pageBySlug = new Map(content.pages.map((page) => [String(page.slug || '').replace(/^\//, ''), page]));
+const publishedPageSlugs = new Set(content.pages.map((page) => String(page.slug || '').replace(/^\//, '')));
+const managedRouteSlugs = new Map([
+  ['/', 'home'],
+  ['/about-us', 'about-us'],
+  ['/faq', 'faq'],
+  ['/rental-conditions', 'rental-conditions'],
+  ['/contact', 'contact'],
+  ['/reviews', 'reviews'],
+  ['/privacy-policy', 'privacy-policy'],
+  ['/terms-and-conditions', 'terms-and-conditions'],
+  ['/blog', 'blog']
+]);
+const pageManagementReady = [...managedRouteSlugs.values()].some((slug) => !['privacy-policy', 'terms-and-conditions'].includes(slug) && publishedPageSlugs.has(slug));
 
 function absoluteUrl(value) {
   if (!value) return `${siteUrl}/images/optimized/home-hero-600.webp`;
@@ -197,13 +210,13 @@ function renderCmsSections(sections = []) {
     .join('');
 }
 
-function renderPage({ route, title, description = defaultDescription, ogTitle, ogDescription, pageOgImage = ogImage, body, schemas = [], preloadHero = false }) {
+function renderPage({ route, title, description = defaultDescription, ogTitle, ogDescription, pageOgImage = ogImage, body, schemas = [], preloadHero = false, robots = 'index,follow' }) {
   const canonical = `${siteUrl}${route === '/' ? '' : route}`;
   const pageTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
   const headTags = `
     <title>${escapeHtml(pageTitle)}</title>
     <meta name="description" content="${escapeHtml(description)}" />
-    <meta name="robots" content="index,follow" />
+    <meta name="robots" content="${escapeHtml(robots)}" />
     <meta name="language" content="Thai" />
     <meta name="geo.region" content="TH-90" />
     <meta name="geo.placename" content="Hat Yai, Songkhla, Thailand" />
@@ -227,6 +240,17 @@ function renderPage({ route, title, description = defaultDescription, ogTitle, o
     .replace(/<title>.*?<\/title>/, '')
     .replace('</head>', `${headTags}\n  </head>`)
     .replace('<div id="root"></div>', `<div id="root">${body}</div>`);
+}
+
+function renderNoIndexPage(route) {
+  return renderPage({
+    route,
+    title: 'ไม่พบหน้าเว็บ',
+    description: 'ไม่พบหน้าเว็บที่ต้องการ',
+    robots: 'noindex,nofollow',
+    body: '<main><h1>ไม่พบหน้าเว็บ</h1><p>หน้าเว็บนี้ยังไม่เปิดเผยแพร่หรือถูกซ่อนไว้</p><a href="/">กลับหน้าหลัก</a></main>',
+    schemas: []
+  });
 }
 
 function routeFile(route) {
@@ -506,7 +530,9 @@ for (const post of content.blogPosts) {
 }
 
 for (const route of routes) {
-  await writeRoute(route.route, renderPage(route));
+  const managedSlug = managedRouteSlugs.get(route.route);
+  const shouldHideManagedRoute = pageManagementReady && managedSlug && !publishedPageSlugs.has(managedSlug);
+  await writeRoute(route.route, shouldHideManagedRoute ? renderNoIndexPage(route.route) : renderPage(route));
 }
 
 console.log(`Generated static HTML from ${content.source} content for ${routes.length} routes.`);

@@ -3,6 +3,7 @@ import { Outlet } from 'react-router';
 import Header from '../components/navigation/Header.jsx';
 import Footer from '../components/footer/Footer.jsx';
 import AppContainer from '../components/layout/AppContainer.jsx';
+import PageVisibilityGate from '../components/cms/PageVisibilityGate.jsx';
 import { colors } from '../theme/colors.js';
 
 export default function LegalLayout() {
@@ -20,7 +21,9 @@ export default function LegalLayout() {
               border: `1px solid ${colors.hairlineOnLight}`
             }}
           >
-            <Outlet />
+            <PageVisibilityGate>
+              <Outlet />
+            </PageVisibilityGate>
           </Paper>
         </AppContainer>
       </Box>

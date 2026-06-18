@@ -5,6 +5,7 @@ import { createBreadcrumbSchema, createWebPageSchema } from '../features/seo/sch
 import { useCmsResource } from '../hooks/useCmsResource.js';
 import { usePublicContactSettings } from '../hooks/usePublicContactSettings.js';
 import { cmsService } from '../services/cmsService.js';
+import NotFound from './NotFound.jsx';
 
 const termsContentFallback = {
   title: 'ข้อกำหนดและเงื่อนไขการใช้บริการ',
@@ -88,8 +89,7 @@ function normalizeSections(content) {
   return termsContentFallback.sections;
 }
 
-function normalizePage(pages) {
-  const cmsPage = Array.isArray(pages) ? pages.find((item) => item.slug === 'terms-and-conditions') : null;
+function normalizePage(cmsPage) {
   const content = cmsPage?.content || {};
 
   return {
@@ -114,9 +114,10 @@ function normalizePage(pages) {
 }
 
 export default function TermsConditions() {
-  const { data: pages } = useCmsResource(() => cmsService.getPages(), [], []);
+  const { data: cmsPage, isLoading, error } = useCmsResource(() => cmsService.getPage('terms-and-conditions'), null, []);
   const contact = usePublicContactSettings();
-  const page = normalizePage(pages);
+  if (error && !isLoading) return <NotFound />;
+  const page = normalizePage(cmsPage);
 
   const schemas = [
     createBreadcrumbSchema([

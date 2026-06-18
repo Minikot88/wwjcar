@@ -22,6 +22,20 @@ const staticRoutes = [
   '/terms-and-conditions'
 ];
 
+const managedRouteSlugs = new Map([
+  ['/', 'home'],
+  ['/about-us', 'about-us'],
+  ['/faq', 'faq'],
+  ['/rental-conditions', 'rental-conditions'],
+  ['/contact', 'contact'],
+  ['/reviews', 'reviews'],
+  ['/privacy-policy', 'privacy-policy'],
+  ['/terms-and-conditions', 'terms-and-conditions'],
+  ['/blog', 'blog']
+]);
+
+const routeByManagedSlug = new Map([...managedRouteSlugs.entries()].map(([route, slug]) => [slug, route]));
+
 function uniqueRoutes(routes) {
   return [...new Set(routes.filter(Boolean))];
 }
@@ -40,11 +54,22 @@ function changeFrequency(route) {
 
 const content = await loadCmsContent();
 const today = new Date().toISOString().slice(0, 10);
+const publishedPageSlugs = new Set(content.pages.map((page) => String(page.slug || '').replace(/^\//, '')));
+const pageManagementReady = [...managedRouteSlugs.values()].some(
+  (slug) => !['privacy-policy', 'terms-and-conditions'].includes(slug) && publishedPageSlugs.has(slug)
+);
+const visibleStaticRoutes = staticRoutes.filter((route) => {
+  const managedSlug = managedRouteSlugs.get(route);
+  return !pageManagementReady || !managedSlug || publishedPageSlugs.has(managedSlug);
+});
 const routes = uniqueRoutes([
-  ...staticRoutes,
+  ...visibleStaticRoutes,
   ...content.cars.map((car) => car.slug && `/cars/${car.slug}`),
   ...content.blogPosts.map((post) => post.slug && `/blog/${post.slug}`),
-  ...content.pages.map((page) => page.slug && `/${page.slug.replace(/^\//, '')}`)
+  ...content.pages.map((page) => {
+    const slug = String(page.slug || '').replace(/^\//, '');
+    return routeByManagedSlug.get(slug) || (slug ? `/${slug}` : null);
+  })
 ]);
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>

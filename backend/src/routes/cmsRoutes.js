@@ -64,7 +64,11 @@ const pagePayload = [
   body('slug').isString().trim().isLength({ min: 1, max: 190 }),
   body('title').isString().trim().isLength({ min: 1, max: 220 }),
   body('content').optional().isObject(),
-  body('status').optional().isIn(['published', 'draft']),
+  body('status').optional().isIn(['published', 'draft', 'hidden', 'archived']),
+  validate
+];
+const pageStatusPayload = [
+  body('status').isIn(['published', 'draft', 'hidden', 'archived']),
   validate
 ];
 const rentalConditionPayload = [
@@ -336,9 +340,12 @@ cmsRoutes.get('/settings', optionalAuth, asyncHandler(cmsController.listSettings
 cmsRoutes.put('/settings/:key', requireAuth, requireAdmin, [param('key').isString().trim().isLength({ min: 1, max: 120 }), body('value').exists(), validate], asyncHandler(cmsController.updateSetting));
 cmsRoutes.post('/settings/:key/image', requireAuth, requireAdmin, [param('key').isString().trim().isLength({ min: 1, max: 120 }), validate], upload.single('file'), validateImageUpload, imageFieldPayload, asyncHandler(cmsController.uploadSettingImage));
 
-cmsRoutes.get('/pages', asyncHandler(cmsController.listPages));
+cmsRoutes.get('/pages', optionalAuth, asyncHandler(cmsController.listPages));
+cmsRoutes.get('/pages/:slug', optionalAuth, [param('slug').isString().trim().isLength({ min: 1, max: 190 }), validate], asyncHandler(cmsController.getPage));
 cmsRoutes.post('/pages', requireAuth, requireAdmin, pagePayload, asyncHandler(cmsController.createPage));
 cmsRoutes.put('/pages/:id', requireAuth, requireAdmin, idParam, pagePayload, asyncHandler(cmsController.updatePage));
+cmsRoutes.patch('/pages/:id/status', requireAuth, requireAdmin, idParam, pageStatusPayload, asyncHandler(cmsController.updatePageStatus));
+cmsRoutes.post('/pages/:id/duplicate', requireAuth, requireAdmin, idParam, asyncHandler(cmsController.duplicatePage));
 cmsRoutes.delete('/pages/:id', requireAuth, requireAdmin, idParam, asyncHandler(cmsController.deletePage));
 cmsRoutes.post('/pages/:id/image', requireAuth, requireAdmin, idParam, upload.single('file'), validateImageUpload, imageFieldPayload, asyncHandler(cmsController.uploadPageImage));
 
