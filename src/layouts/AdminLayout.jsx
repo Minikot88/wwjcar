@@ -38,7 +38,7 @@ import { LogoFull } from '../components/brand/Logo.jsx';
 import { cmsService } from '../services/cmsService.js';
 import { colors } from '../theme/colors.js';
 
-const drawerWidth = 304;
+const drawerWidth = 312;
 
 const adminSections = [
   {
@@ -97,16 +97,16 @@ export default function AdminLayout() {
   const closeMobileDrawer = () => setIsMobileDrawerOpen(false);
 
   const sidebar = (
-    <Stack sx={{ bgcolor: colors.canvas, height: '100%', minHeight: 0 }}>
+    <Stack sx={{ bgcolor: 'background.paper', height: '100%', minHeight: 0 }}>
       <Toolbar sx={{ flexShrink: 0, minHeight: { xs: 76, md: 88 }, px: { xs: 2.5, md: 3 } }}>
         <LogoFull />
       </Toolbar>
       <Divider sx={{ borderColor: colors.hairlineSoft }} />
-      <List sx={{ flex: 1, minHeight: 0, overflowY: 'auto', px: 2, py: 3 }}>
+      <List sx={{ flex: 1, minHeight: 0, overflowY: 'auto', px: 2, py: 2.5 }}>
         {adminSections.map((section) => (
-          <Box key={section.title} sx={{ mb: 3 }}>
+          <Box key={section.title} sx={{ mb: 2.75 }}>
             <Box sx={{ px: 1, pb: 1.25 }}>
-              <Typography sx={{ color: 'text.primary', fontSize: '0.76rem', fontWeight: 900, letterSpacing: 0, textTransform: 'none' }}>
+              <Typography sx={{ color: 'text.primary', fontSize: '0.75rem', fontWeight: 950, letterSpacing: 0, textTransform: 'none' }}>
                 {section.title}
               </Typography>
               <Typography color="text.secondary" sx={{ fontSize: '0.75rem', lineHeight: 1.45, mt: 0.35 }}>
@@ -126,10 +126,10 @@ export default function AdminLayout() {
                     onClick={closeMobileDrawer}
                     sx={{
                       alignItems: 'center',
-                      borderRadius: '18px',
+                      borderRadius: '16px',
                       color: 'text.secondary',
                       gap: 1.35,
-                      minHeight: 48,
+                      minHeight: 46,
                       px: 1.5,
                       position: 'relative',
                       transition: 'background-color 160ms ease, color 160ms ease, transform 160ms ease',
@@ -146,7 +146,7 @@ export default function AdminLayout() {
                         width: 3
                       },
                       '&.active': {
-                        bgcolor: 'rgba(255,0,0,0.055)',
+                        bgcolor: colors.primarySofter,
                         color: 'text.primary'
                       },
                       '&.active::before': {
@@ -177,7 +177,14 @@ export default function AdminLayout() {
   );
 
   return (
-    <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', overflowX: 'hidden' }}>
+    <Box
+      sx={{
+        background:
+          'radial-gradient(circle at 92% 6%, rgba(255,0,0,0.055), transparent 24%), linear-gradient(180deg, var(--wwj-bg) 0%, var(--wwj-surface) 100%)',
+        minHeight: '100vh',
+        overflowX: 'hidden'
+      }}
+    >
       <AppBar
         position="sticky"
         elevation={0}
@@ -210,7 +217,7 @@ export default function AdminLayout() {
           display: { xs: 'none', md: 'block' },
           '& .MuiDrawer-paper': {
             borderRight: `1px solid ${colors.hairlineSoft}`,
-            boxShadow: 'none',
+            boxShadow: '8px 0 36px rgba(15,17,21,0.035)',
             boxSizing: 'border-box',
             width: drawerWidth
           }
@@ -248,7 +255,17 @@ export default function AdminLayout() {
           py: { xs: 3, md: 5 }
         }}
       >
-        <Stack spacing={1} sx={{ mb: { xs: 3, md: 4 } }}>
+        <Stack
+          spacing={1}
+          sx={{
+            bgcolor: 'color-mix(in srgb, var(--wwj-bg) 70%, transparent)',
+            border: `1px solid ${colors.hairlineSoft}`,
+            borderRadius: '28px',
+            boxShadow: '0 16px 42px rgba(15,17,21,0.035)',
+            mb: { xs: 3, md: 4 },
+            p: { xs: 2.5, md: 3.5 }
+          }}
+        >
           <Typography variant="caption" color="primary" sx={{ fontWeight: 900 }}>
             ระบบผู้ดูแล WWJ Car Rent
           </Typography>

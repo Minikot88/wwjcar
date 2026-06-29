@@ -2,6 +2,8 @@ export const colors = {
   primary: '#FF0000',
   primaryActive: '#C40000',
   primaryHover: '#B00000',
+  primarySoft: 'rgba(255, 0, 0, 0.08)',
+  primarySofter: 'rgba(255, 0, 0, 0.045)',
   ink: 'var(--wwj-text)',
   body: 'var(--wwj-muted)',
   bodyStrong: 'var(--wwj-text)',
@@ -19,7 +21,10 @@ export const colors = {
   onPrimary: '#FFFFFF',
   success: '#03904A',
   warning: '#F13A2C',
-  info: '#4C98B9'
+  info: '#4C98B9',
+  shadowSoft: '0 18px 48px rgba(15, 17, 21, 0.055)',
+  shadowMedium: '0 24px 64px rgba(15, 17, 21, 0.08)',
+  shadowLift: '0 30px 80px rgba(15, 17, 21, 0.12)'
 };
 
 export const modeColors = {

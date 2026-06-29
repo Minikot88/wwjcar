@@ -177,10 +177,32 @@ function ContactButton({ icon, title, value, action, primary = false }) {
       {...externalLinkProps(action)}
       aria-label={action.ariaLabel}
       variant={primary ? 'contained' : 'outlined'}
-      sx={{ justifyContent: 'flex-start', minHeight: 84, p: 2.5, textAlign: 'left' }}
+      sx={{
+        borderRadius: '24px',
+        justifyContent: 'flex-start',
+        minHeight: 92,
+        p: 2.5,
+        textAlign: 'left',
+        width: '100%',
+        '& .MuiButton-startIcon': { mr: 0 }
+      }}
     >
       <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
-        {icon}
+        <Box
+          sx={{
+            alignItems: 'center',
+            bgcolor: primary ? 'rgba(255,255,255,0.16)' : colors.primarySoft,
+            borderRadius: '18px',
+            color: primary ? colors.onPrimary : colors.primary,
+            display: 'inline-flex',
+            flexShrink: 0,
+            height: 52,
+            justifyContent: 'center',
+            width: 52
+          }}
+        >
+          {icon}
+        </Box>
         <Box>
           <Typography sx={{ fontWeight: 700 }}>{title}</Typography>
           <Typography variant="body2">{value}</Typography>

@@ -7,10 +7,29 @@ export default function PageHeader({ eyebrow, title, description, align = 'left'
   return (
     <Box
       sx={{
-        borderBottom: `1px solid ${colors.hairlineSoft}`,
+        background:
+          'linear-gradient(135deg, color-mix(in srgb, var(--wwj-surface) 64%, transparent), transparent 58%)',
+        border: `1px solid ${colors.hairlineSoft}`,
+        borderRadius: { xs: '24px', md: '32px' },
+        boxShadow: '0 18px 52px rgba(15,17,21,0.04)',
+        overflow: 'hidden',
         pb: { xs: `${spacing.md}px`, md: `${spacing.lg}px` },
-        pt: { xs: `${spacing.xs}px`, md: `${spacing.sm}px` },
+        pl: { xs: 3, md: 5 },
+        pr: { xs: 3, md: 5 },
+        pt: { xs: `${spacing.md}px`, md: `${spacing.lg}px` },
+        position: 'relative',
         textAlign: align,
+        '&::after': {
+          bgcolor: colors.primary,
+          borderRadius: '999px',
+          bottom: 0,
+          content: '""',
+          height: 3,
+          left: align === 'center' ? '50%' : { xs: 24, md: 40 },
+          position: 'absolute',
+          transform: align === 'center' ? 'translateX(-50%)' : 'none',
+          width: 56
+        },
         ...sx
       }}
     >

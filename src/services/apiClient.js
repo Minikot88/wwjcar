@@ -41,7 +41,10 @@ async function parseResponse(response) {
 
   if (!response.ok) {
     const message = typeof payload === 'object' ? payload.message : payload;
-    throw new Error(message || `API request failed with status ${response.status}`);
+    const error = new Error(message || `API request failed with status ${response.status}`);
+    error.status = response.status;
+    error.payload = payload;
+    throw error;
   }
 
   return payload;

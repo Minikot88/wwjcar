@@ -17,23 +17,29 @@ export default function RentalProcessSection() {
           </Typography>
         </Box>
 
-        <Box sx={{ ...gridColumns({ xs: 1, sm: 2, lg: 4 }), gap: { xs: 2.5, md: 3 } }}>
+        <Box sx={{ ...gridColumns({ xs: 1, sm: 2, lg: 4 }), gap: { xs: 2.5, md: 3 }, position: 'relative' }}>
           {rentalProcessSteps.map((step, index) => (
             <Stack
               key={step}
               spacing={3}
               sx={{
-                bgcolor: colors.canvas,
+                bgcolor: 'background.paper',
                 border: `1px solid ${colors.hairlineSoft}`,
                 borderRadius: '24px',
-                boxShadow: '0 18px 45px rgba(15,17,21,0.06)',
+                boxShadow: colors.shadowSoft,
                 p: { xs: 3, md: 4 },
-                minHeight: 190
+                minHeight: 180,
+                position: 'relative',
+                transition: 'transform 180ms ease, box-shadow 180ms ease',
+                '&:hover': {
+                  transform: { md: 'translateY(-3px)' },
+                  boxShadow: colors.shadowMedium
+                }
               }}
             >
               <Typography
                 sx={{
-                  bgcolor: 'rgba(255,0,0,0.08)',
+                  bgcolor: colors.primarySoft,
                   color: colors.primary,
                   width: 52,
                   height: 52,

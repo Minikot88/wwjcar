@@ -27,6 +27,6 @@ export default function PageVisibilityGate({ children }) {
 
   if (!slug) return children;
   if (isLoading) return <PageLoader />;
-  if (error) return <NotFound />;
+  if (error?.status === 404) return <NotFound />;
   return children;
 }

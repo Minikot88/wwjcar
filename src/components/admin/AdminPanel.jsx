@@ -6,15 +6,28 @@ export default function AdminPanel({ title, description, actionLabel, onAction, 
     <Box
       sx={{
         bgcolor: 'background.paper',
-        borderRadius: { xs: '20px', md: '24px' },
-        boxShadow: '0 20px 60px rgba(15,17,21,0.055)',
+        border: `1px solid ${colors.hairlineSoft}`,
+        borderRadius: { xs: '22px', md: '30px' },
+        boxShadow: colors.shadowSoft,
         maxWidth: '100%',
         minWidth: 0,
         overflow: 'hidden',
         p: { xs: 2, sm: 3, md: 4 }
       }}
     >
-      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} sx={{ alignItems: { xs: 'flex-start', sm: 'center' }, justifyContent: 'space-between', mb: { xs: 3, md: 4 } }}>
+      <Stack
+        direction={{ xs: 'column', sm: 'row' }}
+        spacing={3}
+        sx={{
+          alignItems: { xs: 'flex-start', sm: 'center' },
+          borderBottom: `1px solid ${colors.hairlineSoft}`,
+          justifyContent: 'space-between',
+          mb: { xs: 3, md: 4 },
+          mx: { xs: -2, sm: -3, md: -4 },
+          px: { xs: 2, sm: 3, md: 4 },
+          pb: { xs: 2.5, md: 3 }
+        }}
+      >
         <Box sx={{ minWidth: 0 }}>
           <Typography component="h2" sx={{ fontSize: { xs: '1.45rem', md: '1.9rem' }, fontWeight: 950, letterSpacing: 0, lineHeight: 1.2 }}>
             {title}
@@ -26,7 +39,7 @@ export default function AdminPanel({ title, description, actionLabel, onAction, 
           ) : null}
         </Box>
         {actionLabel ? (
-          <Button variant="contained" onClick={onAction} sx={{ width: { xs: '100%', sm: 'auto' } }}>
+          <Button variant="contained" onClick={onAction} sx={{ minHeight: 50, width: { xs: '100%', sm: 'auto' } }}>
             {actionLabel}
           </Button>
         ) : null}

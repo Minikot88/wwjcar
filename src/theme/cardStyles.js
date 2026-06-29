@@ -3,7 +3,7 @@ import { spacing } from './spacing.js';
 
 const baseCard = {
   borderRadius: '24px',
-  boxShadow: '0 18px 45px rgba(15, 17, 21, 0.08)',
+  boxShadow: colors.shadowSoft,
   overflow: 'hidden'
 };
 

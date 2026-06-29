@@ -29,10 +29,12 @@ export default function CarDetailHero({ car }) {
     >
       <Box
         sx={{
+          bgcolor: colors.canvasElevated,
           borderRadius: '24px',
-          boxShadow: '0 26px 80px rgba(15,17,21,0.07)',
+          boxShadow: colors.shadowMedium,
           minHeight: { xs: 320, md: 520 },
-          overflow: 'hidden'
+          overflow: 'hidden',
+          p: { xs: 1.25, md: 2 }
         }}
       >
         <Box
@@ -44,7 +46,8 @@ export default function CarDetailHero({ car }) {
             display: 'block',
             height: '100%',
             minHeight: { xs: 320, md: 520 },
-            objectFit: 'cover',
+            objectFit: 'contain',
+            borderRadius: '20px',
             width: '100%'
           }}
         />
@@ -56,7 +59,7 @@ export default function CarDetailHero({ car }) {
           bgcolor: colors.canvas,
           borderRadius: '24px',
           border: `1px solid ${colors.hairlineSoft}`,
-          boxShadow: 'none',
+          boxShadow: colors.shadowSoft,
           p: { xs: 3, md: 4.5 }
         }}
       >
@@ -73,7 +76,7 @@ export default function CarDetailHero({ car }) {
           <Typography variant="caption" sx={{ color: colors.body }}>
             ราคาเช่าต่อวัน
           </Typography>
-          <Typography sx={{ color: colors.primary, fontSize: { xs: '2.4rem', md: '3.05rem' }, fontWeight: 850, lineHeight: 1 }}>
+          <Typography sx={{ color: colors.primary, fontSize: { xs: '2.35rem', md: '3rem' }, fontWeight: 950, lineHeight: 1 }}>
             ฿{formatter.format(car.pricePerDay)}
           </Typography>
         </Box>

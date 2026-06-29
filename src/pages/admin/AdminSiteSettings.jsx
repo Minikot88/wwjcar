@@ -1,5 +1,5 @@
 ﻿import { Alert, Box, Button, Stack, TextField, Typography } from '@mui/material';
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import AdminPanel from '../../components/admin/AdminPanel.jsx';
 import { AdminLoadingBlock } from '../../components/admin/AdminFeedback.jsx';
 import { useAdminAction } from '../../hooks/useAdminAction.js';
@@ -20,7 +20,7 @@ export default function AdminSiteSettings() {
   const [logoFile, setLogoFile] = useState(null);
   const [heroFile, setHeroFile] = useState(null);
   const [ogFile, setOgFile] = useState(null);
-  useMemo(() => { if (settings.length) setForm({ phone: valueOf(settings, 'phone'), line: valueOf(settings, 'line'), whatsapp: valueOf(settings, 'whatsapp'), facebook: valueOf(settings, 'facebook'), instagram: valueOf(settings, 'instagram'), email: valueOf(settings, 'email'), googleMaps: valueOf(settings, 'googleMaps'), googleBusinessProfile: valueOf(settings, 'googleBusinessProfile'), businessHours: valueOf(settings, 'businessHours'), footerText: valueOf(settings, 'footerText'), seoTitle: valueOf(settings, 'seoTitle'), seoDescription: valueOf(settings, 'seoDescription'), logo: valueOf(settings, 'logo'), heroImage: valueOf(settings, 'heroImage'), ogImage: valueOf(settings, 'ogImage') }); }, [settings.length]);
+  useEffect(() => { if (settings.length) setForm({ phone: valueOf(settings, 'phone'), line: valueOf(settings, 'line'), whatsapp: valueOf(settings, 'whatsapp'), facebook: valueOf(settings, 'facebook'), instagram: valueOf(settings, 'instagram'), email: valueOf(settings, 'email'), googleMaps: valueOf(settings, 'googleMaps'), googleBusinessProfile: valueOf(settings, 'googleBusinessProfile'), businessHours: valueOf(settings, 'businessHours'), footerText: valueOf(settings, 'footerText'), seoTitle: valueOf(settings, 'seoTitle'), seoDescription: valueOf(settings, 'seoDescription'), logo: valueOf(settings, 'logo'), heroImage: valueOf(settings, 'heroImage'), ogImage: valueOf(settings, 'ogImage') }); }, [settings.length]);
   const update = (key, value) => setForm((current) => ({ ...current, [key]: value }));
   const saveKeys = async (keys, message) => { await action.run(() => Promise.all(keys.map((key) => cmsService.updateSetting(key, form[key]))), message); };
   const uploadImage = async (key, file, setter, message) => { const result = await action.run(() => cmsService.uploadSettingImage(key, file, { usageType: key }), message); if (result) setter(null); };

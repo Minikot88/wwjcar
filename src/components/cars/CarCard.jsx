@@ -15,101 +15,162 @@ function CarCard({ car }) {
   const imageAsset = getCarImageAsset(car);
   const imageSrc = car.image || imageAsset?.src;
   const imageProps = car.image
-    ? { alt: `${car.name} WWJ Car Rent` }
-    : responsiveImageProps(imageAsset, `${car.name} WWJ Car Rent`);
+    ? { alt: `${car.name} รถเช่าหาดใหญ่ WWJ Car Rent` }
+    : responsiveImageProps(imageAsset, `${car.name} รถเช่าหาดใหญ่ WWJ Car Rent`);
 
   return (
     <Box
       sx={{
-        bgcolor: colors.canvas,
-        borderRadius: '24px',
-        boxShadow: '0 16px 44px rgba(15, 17, 21, 0.045)',
+        bgcolor: 'background.paper',
+        border: `1px solid ${colors.hairlineSoft}`,
+        borderRadius: '26px',
+        boxShadow: colors.shadowSoft,
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
         minWidth: 0,
         overflow: 'hidden',
-        transition: 'transform 180ms ease, box-shadow 180ms ease',
+        transition: 'transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease',
         '&:hover': {
+          borderColor: 'color-mix(in srgb, var(--wwj-border) 68%, #ff0000)',
           transform: { md: 'translateY(-4px)' },
-          boxShadow: '0 24px 62px rgba(15, 17, 21, 0.085)',
+          boxShadow: colors.shadowMedium,
           img: {
             transform: { md: 'scale(1.025)' }
           }
+        },
+        '&:focus-within': {
+          borderColor: colors.primary,
+          boxShadow: '0 0 0 4px rgba(255,0,0,0.08)'
         }
       }}
     >
-      <Box sx={{ position: 'relative', overflow: 'hidden' }}>
+      <Box
+        sx={{
+          background: 'linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 78%, var(--wwj-surface) 100%)',
+          p: { xs: 1, md: 1.2 },
+          position: 'relative'
+        }}
+      >
         <Link to={`/cars/${car.slug}`} aria-label={`ดูรายละเอียด ${car.name}`}>
           <Box
-            component="img"
-            src={imageSrc}
-            {...imageProps}
-            loading="lazy"
             sx={{
-              aspectRatio: '16 / 10.5',
-              bgcolor: colors.surfaceSoftLight,
-              display: 'block',
-              objectFit: 'cover',
-              width: '100%',
-              transition: 'transform 240ms ease'
+              bgcolor: '#FFFFFF',
+              borderRadius: '21px',
+              display: 'grid',
+              minHeight: { xs: 172, sm: 178, md: 182 },
+              overflow: 'hidden',
+              placeItems: 'center',
+              position: 'relative',
+              '&::after': {
+                background: 'linear-gradient(180deg, transparent 72%, rgba(255,255,255,0.92) 100%)',
+                content: '""',
+                inset: 0,
+                pointerEvents: 'none',
+                position: 'absolute'
+              }
             }}
-          />
+          >
+            <Box
+              component="img"
+              src={imageSrc}
+              {...imageProps}
+              loading="lazy"
+              sx={{
+                height: { xs: 172, sm: 178, md: 182 },
+                display: 'block',
+                objectFit: 'contain',
+                objectPosition: 'center center',
+                p: { xs: 1.6, md: 1.8 },
+                position: 'relative',
+                width: '100%',
+                transition: 'transform 240ms ease',
+                zIndex: 1
+              }}
+            />
+          </Box>
         </Link>
         <Chip
           label={primaryBadge}
+          size="small"
           sx={{
+            bgcolor: 'rgba(255,255,255,0.92)',
+            border: `1px solid ${colors.hairlineSoft}`,
+            color: '#212121',
+            fontWeight: 850,
+            left: 18,
             position: 'absolute',
             top: 18,
-            left: 18,
-            borderRadius: '999px',
-            bgcolor: 'color-mix(in srgb, var(--wwj-bg) 88%, transparent)',
-            color: 'text.primary',
-            fontWeight: 700,
-            boxShadow: 'none',
             backdropFilter: 'blur(12px)'
           }}
         />
       </Box>
 
-      <Stack spacing={2.5} sx={{ flex: 1, minWidth: 0, p: { xs: 2.5, md: 3.25 } }}>
+      <Stack spacing={1.8} sx={{ flex: 1, minWidth: 0, p: { xs: 2.25, md: 2.5 } }}>
         <Box>
-          <Typography variant="caption" sx={{ color: colors.primary }}>
+          <Typography variant="caption" sx={{ color: colors.primary, fontWeight: 850 }}>
             {car.brand}
           </Typography>
           <Typography
             component={Link}
             to={`/cars/${car.slug}`}
             variant="h3"
-            sx={{ color: colors.ink, mt: 0.75, display: 'block', overflowWrap: 'anywhere', textDecoration: 'none' }}
+            sx={{
+              color: 'text.primary',
+              display: 'block',
+              mt: 0.65,
+              overflowWrap: 'anywhere',
+              textDecoration: 'none',
+              '&:hover': { color: colors.primary }
+            }}
           >
             {car.name}
           </Typography>
         </Box>
 
-        <Box>
+        <Box
+          sx={{
+            bgcolor: colors.canvasElevated,
+            borderRadius: '18px',
+            px: 1.75,
+            py: 1.25
+          }}
+        >
           <Typography variant="caption" sx={{ color: colors.muted }}>
             เริ่มต้น
           </Typography>
           <Stack direction="row" spacing={0.75} sx={{ alignItems: 'baseline', flexWrap: 'wrap' }}>
-            <Typography sx={{ color: colors.primary, fontSize: '1.75rem', fontWeight: 850, lineHeight: 1.1 }}>
+            <Typography sx={{ color: colors.primary, fontSize: { xs: '1.55rem', md: '1.72rem' }, fontWeight: 950, lineHeight: 1.05 }}>
               ฿{formatter.format(car.pricePerDay)}
             </Typography>
             <Typography color="text.secondary">/ วัน</Typography>
           </Stack>
         </Box>
 
-        <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap" sx={{ pt: 0.5 }}>
+        <Stack direction="row" spacing={0.85} useFlexGap flexWrap="wrap">
           <Spec icon={<SettingsIcon fontSize="small" />} label={getTransmissionLabel(car.transmission)} />
           <Spec icon={<AirlineSeatReclineNormalIcon fontSize="small" />} label={`${car.seats} ที่นั่ง`} />
           <Spec icon={<LocalGasStationIcon fontSize="small" />} label={getFuelLabel(car.fuel)} />
         </Stack>
 
-        <Stack>
-          <Button component={Link} to={`/cars/${car.slug}`} variant="contained" fullWidth aria-label={`ดูรายละเอียด ${car.name}`} sx={{ mt: 0.5 }}>
-            ดูรายละเอียด
-          </Button>
-        </Stack>
+        <Box sx={{ flex: 1 }} />
+
+        <Button
+          component={Link}
+          to={`/cars/${car.slug}`}
+          variant="contained"
+          fullWidth
+          aria-label={`ดูรายละเอียด ${car.name}`}
+          sx={{
+            mt: 0.25,
+            minHeight: 48,
+            '&:hover': {
+              transform: { md: 'translateY(-1px)' }
+            }
+          }}
+        >
+          ดูรายละเอียด
+        </Button>
       </Stack>
     </Box>
   );
@@ -122,16 +183,19 @@ function Spec({ icon, label }) {
       spacing={0.75}
       sx={{
         alignItems: 'center',
-        bgcolor: colors.canvasElevated,
+        bgcolor: 'transparent',
+        border: `1px solid ${colors.hairlineSoft}`,
         borderRadius: '999px',
         color: colors.body,
         minWidth: 0,
-        px: 1.35,
-        py: 0.85
+        px: 1.1,
+        py: 0.65
       }}
     >
-      {icon}
-      <Typography variant="body2" sx={{ overflowWrap: 'anywhere' }}>{label}</Typography>
+      <Box sx={{ color: colors.primary, display: 'inline-flex' }}>{icon}</Box>
+      <Typography variant="body2" sx={{ overflowWrap: 'anywhere' }}>
+        {label}
+      </Typography>
     </Stack>
   );
 }

@@ -72,7 +72,7 @@ function CarRentalDecisionSection({ car }) {
     <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '1.3fr 0.7fr' }, gap: { xs: 4, md: 6 } }}>
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' }, gap: 2 }}>
         {details.map((item) => (
-          <Box key={item.title} sx={{ bgcolor: colors.canvas, border: `1px solid ${colors.hairlineSoft}`, borderRadius: '20px', boxShadow: '0 14px 32px rgba(15,17,21,0.05)', p: 3 }}>
+          <Box key={item.title} sx={{ bgcolor: 'background.paper', border: `1px solid ${colors.hairlineSoft}`, borderRadius: '22px', boxShadow: colors.shadowSoft, p: 3 }}>
             <Typography variant="caption" color="primary">
               {item.title}
             </Typography>
@@ -83,7 +83,7 @@ function CarRentalDecisionSection({ car }) {
         ))}
       </Box>
 
-      <Stack spacing={3} sx={{ bgcolor: colors.canvas, border: `1px solid ${colors.hairlineSoft}`, borderRadius: '24px', boxShadow: '0 18px 45px rgba(15,17,21,0.06)', p: { xs: 3, md: 4 }, alignSelf: 'start' }}>
+      <Stack spacing={3} sx={{ bgcolor: 'background.paper', border: `1px solid ${colors.hairlineSoft}`, borderRadius: '28px', boxShadow: colors.shadowMedium, p: { xs: 3, md: 4 }, alignSelf: 'start', position: { lg: 'sticky' }, top: { lg: 104 } }}>
         <Box>
           <Typography variant="caption" color="primary">
             สรุปเงื่อนไขก่อนเช่า

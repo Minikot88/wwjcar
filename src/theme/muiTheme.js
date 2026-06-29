@@ -84,7 +84,8 @@ export function createMuiTheme(colorMode = 'light') {
           backgroundColor: modePalette.background,
           color: modePalette.text,
           overflowX: 'hidden',
-          textRendering: 'optimizeLegibility'
+          textRendering: 'optimizeLegibility',
+          WebkitFontSmoothing: 'antialiased'
         },
         html: {
           overflowX: 'hidden'
@@ -95,6 +96,13 @@ export function createMuiTheme(colorMode = 'light') {
         },
         'img, video, canvas, svg': {
           maxWidth: '100%'
+        },
+        'a, button, [role="button"], input, textarea, select': {
+          WebkitTapHighlightColor: 'transparent'
+        },
+        ':focus-visible': {
+          outline: `3px solid ${colors.primary}`,
+          outlineOffset: 3
         },
         '::selection': {
           backgroundColor: colors.primary,
@@ -114,6 +122,7 @@ export function createMuiTheme(colorMode = 'light') {
           textTransform: 'none',
           boxShadow: 'none',
           fontWeight: 700,
+          transition: 'background-color 160ms ease, border-color 160ms ease, color 160ms ease, box-shadow 160ms ease, transform 160ms ease',
           '&.Mui-focusVisible': {
             outline: `3px solid ${colors.primary}`,
             outlineOffset: 2
@@ -123,13 +132,26 @@ export function createMuiTheme(colorMode = 'light') {
           boxShadow: mode === 'dark' ? 'none' : '0 12px 26px rgba(255, 0, 0, 0.14)',
           '&:hover': {
             backgroundColor: colors.primaryHover,
-            boxShadow: mode === 'dark' ? 'none' : '0 16px 34px rgba(255, 0, 0, 0.18)'
+            boxShadow: mode === 'dark' ? 'none' : '0 16px 34px rgba(255, 0, 0, 0.18)',
+            transform: 'translateY(-1px)'
+          },
+          '&:active': {
+            transform: 'translateY(0)'
           }
         },
         outlined: {
-          borderColor: colors.hairline,
-          color: colors.ink,
-          backgroundColor: 'transparent'
+          borderColor: modePalette.border,
+          color: modePalette.text,
+          backgroundColor: mode === 'dark' ? modePalette.surface : '#FFFFFF',
+          '&:hover': {
+            borderColor: colors.primary,
+            backgroundColor: mode === 'dark' ? modePalette.surfaceStrong : '#FFFFFF',
+            color: colors.primary,
+            transform: 'translateY(-1px)'
+          },
+          '&:active': {
+            transform: 'translateY(0)'
+          }
         }
       }
     },
@@ -138,7 +160,7 @@ export function createMuiTheme(colorMode = 'light') {
         root: {
           borderRadius: '24px',
           backgroundImage: 'none',
-          boxShadow: mode === 'dark' ? 'none' : '0 18px 45px rgba(15, 17, 21, 0.055)'
+          boxShadow: mode === 'dark' ? 'none' : colors.shadowSoft
         }
       }
     },
@@ -165,7 +187,7 @@ export function createMuiTheme(colorMode = 'light') {
       styleOverrides: {
         root: {
           borderRadius: '20px',
-          border: `1px solid ${colors.hairlineSoft}`,
+          border: `1px solid ${modePalette.borderSoft}`,
           boxShadow: 'none',
           marginBottom: 10,
           overflow: 'hidden',
@@ -201,7 +223,7 @@ export function createMuiTheme(colorMode = 'light') {
         root: {
           borderRadius: '18px',
           backgroundColor: mode === 'dark' ? modePalette.surface : '#FFFFFF',
-          transition: 'border-color 160ms ease, background-color 160ms ease',
+          transition: 'border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease',
           '& .MuiOutlinedInput-notchedOutline': {
             borderColor: modePalette.border
           },
@@ -211,6 +233,9 @@ export function createMuiTheme(colorMode = 'light') {
           '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
             borderColor: colors.primary,
             borderWidth: 1
+          },
+          '&.Mui-focused': {
+            boxShadow: '0 0 0 4px rgba(255,0,0,0.06)'
           }
         }
       }
@@ -220,13 +245,50 @@ export function createMuiTheme(colorMode = 'light') {
         root: {
           borderBottomColor: modePalette.borderSoft,
           paddingBottom: spacing.xs,
-          paddingTop: spacing.xs
+          paddingTop: spacing.xs,
+          verticalAlign: 'middle'
         },
         head: {
-          backgroundColor: modePalette.background,
+          backgroundColor: modePalette.surface,
           color: modePalette.muted,
           fontSize: '0.78rem',
-          fontWeight: 750
+          fontWeight: 850,
+          letterSpacing: 0
+        }
+      }
+    },
+    MuiTableRow: {
+      styleOverrides: {
+        root: {
+          transition: 'background-color 140ms ease',
+          '&:hover': {
+            backgroundColor: mode === 'dark' ? 'rgba(255,255,255,0.025)' : '#FAFBFC'
+          }
+        }
+      }
+    },
+    MuiAlert: {
+      styleOverrides: {
+        root: {
+          borderRadius: '18px',
+          alignItems: 'center'
+        }
+      }
+    },
+    MuiTabs: {
+      styleOverrides: {
+        root: {
+          minHeight: 44
+        }
+      }
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          borderRadius: '999px',
+          minHeight: 42,
+          textTransform: 'none',
+          fontWeight: 800
         }
       }
     },

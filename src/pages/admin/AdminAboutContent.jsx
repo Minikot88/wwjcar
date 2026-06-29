@@ -1,5 +1,5 @@
 ﻿import { Alert, Box, Button, Chip, Stack, Tab, Tabs, TextField, Typography } from '@mui/material';
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import AdminPanel from '../../components/admin/AdminPanel.jsx';
 import { AdminLoadingBlock } from '../../components/admin/AdminFeedback.jsx';
 import { useAdminAction } from '../../hooks/useAdminAction.js';
@@ -18,7 +18,7 @@ export default function AdminAboutContent() {
   const [tab, setTab] = useState('edit');
   const settings = Array.isArray(data) ? data : [];
   const [form, setForm] = useState(fallbackAbout);
-  useMemo(() => { if (settings.length) setForm({ ...fallbackAbout, ...valueOf(settings) }); }, [settings.length]);
+  useEffect(() => { if (settings.length) setForm({ ...fallbackAbout, ...valueOf(settings) }); }, [settings.length]);
   const update = (key, value) => setForm((current) => ({ ...current, [key]: value }));
   const save = async () => { await action.run(() => cmsService.updateSetting('about', form), 'บันทึกหน้าเกี่ยวกับเราแล้ว'); };
 

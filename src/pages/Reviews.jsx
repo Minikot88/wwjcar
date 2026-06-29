@@ -45,11 +45,20 @@ export default function Reviews() {
         <PageHeader eyebrow="รีวิวลูกค้า" title="เสียงจากลูกค้า WWJ Car Rent" description="ประสบการณ์จากลูกค้าที่ใช้บริการรถเช่าหาดใหญ่ รับรถสนามบิน และเช่ารถรายวันกับเรา" />
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 3 }}>
           {reviews.map((review) => (
-            <Box key={review.id || review.content} sx={{ border: `1px solid ${colors.hairline}`, p: 4 }}>
+            <Box
+              key={review.id || review.content}
+              sx={{
+                bgcolor: 'background.paper',
+                border: `1px solid ${colors.hairlineSoft}`,
+                borderRadius: '26px',
+                boxShadow: colors.shadowSoft,
+                p: { xs: 3, md: 4 }
+              }}
+            >
               {review.imageUrl ? (
-                <Box component="img" src={review.imageUrl} alt={review.customerName} sx={{ aspectRatio: '16 / 10', mb: 2.5, objectFit: 'cover', width: '100%' }} />
+                <Box component="img" src={review.imageUrl} alt={review.customerName} sx={{ aspectRatio: '16 / 10', borderRadius: '20px', mb: 2.5, objectFit: 'cover', width: '100%' }} />
               ) : null}
-              <Typography variant="h3" component="blockquote">
+              <Typography variant="h3" component="blockquote" sx={{ m: 0, lineHeight: 1.65 }}>
                 "{review.content}"
               </Typography>
               <Typography color="text.secondary" sx={{ mt: 2 }}>

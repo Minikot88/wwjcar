@@ -22,7 +22,7 @@ export default function Footer() {
         bgcolor: colors.canvas,
         borderTop: `1px solid ${colors.hairlineSoft}`,
         color: colors.body,
-        py: { xs: 4, md: 5 }
+        py: { xs: 4.5, md: 6 }
       }}
     >
       <AppContainer size="editorial">
@@ -31,13 +31,13 @@ export default function Footer() {
             alignItems: { xs: 'flex-start', md: 'center' },
             display: 'flex',
             flexDirection: { xs: 'column', md: 'row' },
-            gap: { xs: 3, md: 6 },
+            gap: { xs: 3, md: 7 },
             justifyContent: 'space-between'
           }}
         >
-          <Stack spacing={1.25} sx={{ maxWidth: 500 }}>
+          <Stack spacing={1.4} sx={{ maxWidth: 520 }}>
             <LogoFull markSize={{ xs: 34, md: 38 }} />
-            <Typography color="text.secondary" sx={{ lineHeight: 1.8, maxWidth: 460 }}>
+            <Typography color="text.secondary" sx={{ lineHeight: 1.8, maxWidth: 480 }}>
               {contactSettings.footerText}
             </Typography>
             <Stack direction="row" spacing={1}>
@@ -47,7 +47,13 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="เปิด Facebook ของ WWJ Car Rent"
-                sx={{ color: colors.body, '&:hover': { color: colors.primary } }}
+                sx={{
+                  bgcolor: colors.canvasElevated,
+                  color: colors.body,
+                  height: 42,
+                  width: 42,
+                  '&:hover': { color: colors.primary }
+                }}
               >
                 <FacebookIcon fontSize="small" />
               </IconButton>
@@ -57,7 +63,13 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="เปิด Instagram ของ WWJ Car Rent"
-                sx={{ color: colors.body, '&:hover': { color: colors.primary } }}
+                sx={{
+                  bgcolor: colors.canvasElevated,
+                  color: colors.body,
+                  height: 42,
+                  width: 42,
+                  '&:hover': { color: colors.primary }
+                }}
               >
                 <InstagramIcon fontSize="small" />
               </IconButton>

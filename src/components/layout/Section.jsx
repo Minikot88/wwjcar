@@ -43,6 +43,7 @@ export default function Section({
       component="section"
       sx={{
         ...surfaceStyles[surface],
+        position: 'relative',
         py: responsivePadding,
         ...sx
       }}

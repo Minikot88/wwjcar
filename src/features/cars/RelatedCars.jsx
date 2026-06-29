@@ -18,7 +18,7 @@ export default function RelatedCars({ car }) {
         </Typography>
       </Box>
 
-      <Box sx={{ ...gridColumns({ xs: 1, sm: 2, lg: 3 }), gap: { xs: 3, md: 4 } }}>
+      <Box sx={{ ...gridColumns({ xs: 1, sm: 2, lg: 3 }), gap: { xs: 2.25, md: 3 } }}>
         {relatedCars.map((relatedCar) => (
           <CarCard key={relatedCar.id} car={relatedCar} />
         ))}

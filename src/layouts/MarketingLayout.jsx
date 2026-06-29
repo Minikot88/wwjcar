@@ -11,7 +11,7 @@ const FloatingContactButtons = lazy(() => import('../components/cta/FloatingCont
 
 export default function MarketingLayout() {
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', flexDirection: 'column', bgcolor: colors.canvas, pb: { xs: 8, md: 0 } }}>
+    <Box sx={{ display: 'flex', minHeight: '100vh', flexDirection: 'column', bgcolor: colors.canvas, pb: { xs: 'calc(78px + env(safe-area-inset-bottom))', md: 0 } }}>
       <Header />
       <Box component="main" sx={{ flex: 1 }}>
         <AppContainer size="editorial" sx={{ py: { xs: 6, md: 10 } }}>

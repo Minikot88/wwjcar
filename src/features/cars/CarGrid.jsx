@@ -14,7 +14,7 @@ function CarGrid({ cars }) {
   }
 
   return (
-    <Box sx={{ ...gridColumns({ xs: 1, sm: 2, lg: 3 }), gap: { xs: 3, md: 4 } }}>
+    <Box sx={{ ...gridColumns({ xs: 1, sm: 2, lg: 3 }), gap: { xs: 2.25, md: 3 } }}>
       {cars.map((car) => (
         <CarCard key={car.id} car={car} />
       ))}

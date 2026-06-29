@@ -14,11 +14,11 @@ export default function HomeCtaSection() {
         sx={{
           alignItems: { xs: 'flex-start', lg: 'center' },
           justifyContent: 'space-between',
-          bgcolor: colors.primary,
+          background: 'linear-gradient(135deg, #FF0000 0%, #C40000 100%)',
           color: colors.onPrimary,
-          borderRadius: '24px',
-          p: { xs: 3, md: 6 },
-          boxShadow: '0 24px 60px rgba(255,0,0,0.18)'
+          borderRadius: { xs: '26px', md: '32px' },
+          p: { xs: 3, md: 5 },
+          boxShadow: '0 24px 60px rgba(255,0,0,0.16)'
         }}
       >
         <Box sx={{ maxWidth: 780 }}>
@@ -27,6 +27,9 @@ export default function HomeCtaSection() {
           </Typography>
           <Typography component="h2" variant="h1" sx={{ mt: 1 }}>
             พร้อมเดินทางในหาดใหญ่แล้วหรือยัง?
+          </Typography>
+          <Typography sx={{ mt: 1.5, maxWidth: 620, opacity: 0.86 }}>
+            ส่งวันเดินทางและรุ่นรถที่สนใจให้ทีมงานเช็ครถว่างได้ทันที
           </Typography>
         </Box>
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ width: { xs: '100%', sm: 'auto' } }}>
